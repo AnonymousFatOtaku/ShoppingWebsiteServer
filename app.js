@@ -8,6 +8,7 @@ let ejs = require('ejs');
 
 let db = require('./dao/db');
 let user = require('./routes/user');
+let log = require('./routes/log');
 
 let app = express();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/user', user);
+app.use('/log', log);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

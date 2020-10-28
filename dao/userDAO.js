@@ -69,7 +69,7 @@ const deleteUser = async (username) => {
 
 // 登录
 const login = async (username, password) => {
-  let sql = 'SELECT username,phone,email,login_time FROM t_user WHERE is_delete = 0 AND username = ? AND password = MD5(?)'
+  let sql = 'SELECT pk_user_id,username,phone,email,login_time FROM t_user WHERE is_delete = 0 AND username = ? AND password = MD5(?)'
   let sqlParams = [password, username]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {

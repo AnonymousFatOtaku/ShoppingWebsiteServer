@@ -31,7 +31,13 @@ router.post('/deleteUser', async function (req, res) {
   res.send(data);
 })
 
-// 登录
+/*
+* 登录
+* 1.获取用户输入的用户名和密码与数据库中数据比对，不匹配则返回错误提示
+* 2.数据匹配则说明登录成功，保存该用户到cookie中
+* 3.更新该用户登录时间、上次登录时间、登录次数三项数据
+* 4.创建该用户的登录日志
+* */
 router.post('/login', async function (req, res) {
   const {username, password} = req.body
   const user = await userService.login(username, password);
