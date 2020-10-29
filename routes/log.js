@@ -5,6 +5,7 @@ const logService = require("../service/logService");
 
 // 添加日志
 router.post('/addLog', async function (req, res) {
+  const {operateType, username} = req.body
   const data = await logService.addLog();
   res.send(data);
 })

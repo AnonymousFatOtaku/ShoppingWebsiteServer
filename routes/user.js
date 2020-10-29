@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 const userService = require("../service/userService");
+const logService = require("../service/logService");
 
 // 添加用户
 router.post('/addUser', async function (req, res) {
@@ -47,6 +48,8 @@ router.post('/login', async function (req, res) {
     // console.log(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count)
     // 更新用户登录时间、上次登录时间、登录次数
     await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, username)
+    // 添加登录日志
+    await logService.addLog(4, username)
     res.send({status: 0, data: user});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})

@@ -2,10 +2,23 @@
 let db = require('../dao/db');
 
 // 添加日志
-const addLog = async () => {
-  let sql = 'INSERT INTO t_log(operate_type,operate_content,fk_user_id,gmt_create,gmt_modified) VALUES (3,"增",2,NOW(),NOW())'
+const addLog = async (operateType, username) => {
+  let sql = 'INSERT INTO t_log(operate_type,operate_content,fk_username,gmt_create,gmt_modified) VALUES (?,?,?,NOW(),NOW())'
+  let operate_content
+  if (operateType === 0) {// 增
+
+  } else if (operateType === 1) {// 删
+
+  } else if (operateType === 2) {// 改
+
+  } else if (operateType === 3) {// 查
+
+  } else if (operateType === 4) {// 登录
+    operate_content = username + "成功登录"
+  }
+  let sqlParams = [operateType, operate_content, username]
   return new Promise((resolve, reject) => {
-    db.connection.query(sql, (error, result) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
         console.error('添加日志异常')
         reject(error)
