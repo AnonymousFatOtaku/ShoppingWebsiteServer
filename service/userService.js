@@ -31,4 +31,16 @@ const login = async (username, password) => {
   return data
 }
 
-module.exports = {getAllUsers, addUser, updateUser, deleteUser, login}
+// 获取用户上次登录时间和次数
+const getUserLastLoginInfo = async (username) => {
+  let data = await userDAO.getUserLastLoginInfo(username)
+  return data
+}
+
+// 更新用户登录时间、上次登录时间、登录次数
+const updateUserLoginInfo = async (login_time, login_count, username) => {
+  let data = await userDAO.updateUserLoginInfo(login_time, login_count, username)
+  return data
+}
+
+module.exports = {getAllUsers, addUser, updateUser, deleteUser, login, getUserLastLoginInfo, updateUserLoginInfo}

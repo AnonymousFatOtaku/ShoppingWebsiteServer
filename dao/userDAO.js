@@ -70,7 +70,7 @@ const deleteUser = async (username) => {
 // 登录
 const login = async (username, password) => {
   let sql = 'SELECT pk_user_id,username,phone,email,login_time FROM t_user WHERE is_delete = 0 AND username = ? AND password = MD5(?)'
-  let sqlParams = [password, username]
+  let sqlParams = [username, password]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
@@ -84,4 +84,39 @@ const login = async (username, password) => {
   })
 }
 
-module.exports = {getAllUsers, addUser, updateUser, deleteUser, login}
+// 获取用户上次登录时间和次数
+const getUserLastLoginInfo = async (username) => {
+  let sql = 'SELECT login_time,login_count FROM t_user WHERE is_delete = 0 AND username = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, username, (error, result) => {
+      if (error) {
+        console.error('获取用户上次登录时间和次数异常')
+        reject(error)
+      } else {
+        console.error('获取用户上次登录时间和次数正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 更新用户登录时间、上次登录时间、登录次数
+const updateUserLoginInfo = async (login_time, login_count, username) => {
+  let sql = 'UPDATE t_user SET login_time = NOW(),last_login_time = ?,login_count = ? WHERE is_delete = 0 AND username = ?'
+  let last_login_time = login_time
+  login_count += 1
+  let sqlParams = [last_login_time, login_count, username]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新用户登录时间、上次登录时间、登录次数异常')
+        reject(error)
+      } else {
+        console.error('更新用户登录时间、上次登录时间、登录次数正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+module.exports = {getAllUsers, addUser, updateUser, deleteUser, login, getUserLastLoginInfo, updateUserLoginInfo}

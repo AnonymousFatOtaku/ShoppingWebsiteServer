@@ -42,6 +42,11 @@ router.post('/login', async function (req, res) {
   const {username, password} = req.body
   const user = await userService.login(username, password);
   if (user[0]) {// 登录成功
+    // 获取用户上次登录时间和次数
+    const userLastLoginInfo = await userService.getUserLastLoginInfo(username)
+    // console.log(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count)
+    // 更新用户登录时间、上次登录时间、登录次数
+    await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, username)
     res.send({status: 0, data: user});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})
