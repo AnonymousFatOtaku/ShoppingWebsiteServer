@@ -26,8 +26,8 @@ const deleteUser = async (username) => {
 }
 
 // 登录
-const login = async (username, password) => {
-  let data = await userDAO.login(username, password)
+const userLogin = async (username, password) => {
+  let data = await userDAO.userLogin(username, password)
   return data
 }
 
@@ -43,4 +43,4 @@ const updateUserLoginInfo = async (login_time, login_count, username) => {
   return data
 }
 
-module.exports = {getAllUsers, addUser, updateUser, deleteUser, login, getUserLastLoginInfo, updateUserLoginInfo}
+module.exports = {getAllUsers, addUser, updateUser, deleteUser, userLogin, getUserLastLoginInfo, updateUserLoginInfo}
