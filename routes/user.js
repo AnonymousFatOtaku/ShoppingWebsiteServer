@@ -33,8 +33,8 @@ router.post('/deleteUser', async function (req, res) {
 })
 
 /*
-* 登录
-* 1.获取用户输入的用户名和密码与数据库中数据比对，不匹配则返回错误提示
+* 登录(可使用用户名/手机号/邮箱登录)
+* 1.获取用户输入的用户名/手机号/邮箱和密码与数据库中数据比对，不匹配则返回错误提示
 * 2.数据匹配则说明登录成功，保存该用户到cookie中
 * 3.更新该用户登录时间、上次登录时间、登录次数三项数据
 * 4.创建该用户的登录日志
@@ -44,12 +44,12 @@ router.post('/userLogin', async function (req, res) {
   const user = await userService.userLogin(username, password);
   if (user[0]) {// 登录成功
     // 获取用户上次登录时间和次数
-    const userLastLoginInfo = await userService.getUserLastLoginInfo(username)
+    const userLastLoginInfo = await userService.getUserLastLoginInfo(user[0].username)
     // console.log(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count)
     // 更新用户登录时间、上次登录时间、登录次数
-    await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, username)
+    await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, user[0].username)
     // 添加登录日志
-    await logService.addLog(4, username)
+    await logService.addLog(4, user[0].username)
     res.send({status: 0, data: user});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})

@@ -1,45 +1,45 @@
 // 用户Service层，对Dao层发起异步DML操作
-const userDAO = require("../dao/userDAO");
+const userDao = require("../dao/userDao");
 
 // 添加用户
 const addUser = async (username, password) => {
-  let data = await userDAO.addUser(username, password)
+  let data = await userDao.addUser(username, password)
   return data
 }
 
 // 获取所有用户列表
 const getAllUsers = async () => {
-  let data = await userDAO.getAllUsers()
+  let data = await userDao.getAllUsers()
   return data
 }
 
 // 更新用户
 const updateUser = async (username, password) => {
-  let data = await userDAO.updateUser(username, password)
+  let data = await userDao.updateUser(username, password)
   return data
 }
 
 // 删除用户
 const deleteUser = async (username) => {
-  let data = await userDAO.deleteUser(username)
+  let data = await userDao.deleteUser(username)
   return data
 }
 
 // 登录
 const userLogin = async (username, password) => {
-  let data = await userDAO.userLogin(username, password)
+  let data = await userDao.userLogin(username, password)
   return data
 }
 
 // 获取用户上次登录时间和次数
 const getUserLastLoginInfo = async (username) => {
-  let data = await userDAO.getUserLastLoginInfo(username)
+  let data = await userDao.getUserLastLoginInfo(username)
   return data
 }
 
 // 更新用户登录时间、上次登录时间、登录次数
 const updateUserLoginInfo = async (login_time, login_count, username) => {
-  let data = await userDAO.updateUserLoginInfo(login_time, login_count, username)
+  let data = await userDao.updateUserLoginInfo(login_time, login_count, username)
   return data
 }
 

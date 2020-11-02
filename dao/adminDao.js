@@ -69,8 +69,8 @@ const deleteAdmin = async (username) => {
 
 // 登录
 const adminLogin = async (username, password) => {
-  let sql = 'SELECT pk_user_id,username,phone,email,login_time FROM t_user WHERE is_delete = 0 AND type = 1 AND username = ? AND password = MD5(?)'
-  let sqlParams = [username, password]
+  let sql = 'SELECT pk_user_id,username,phone,email FROM t_user WHERE is_delete = 0 AND type = 1 AND password = MD5(?) AND (username = ? OR phone = ? OR email = ?)'
+  let sqlParams = [password, username, username, username]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
@@ -86,9 +86,10 @@ const adminLogin = async (username, password) => {
 
 // 获取用户上次登录时间和次数
 const getAdminLastLoginInfo = async (username) => {
-  let sql = 'SELECT login_time,login_count FROM t_user WHERE is_delete = 0 AND type = 1 AND username = ?'
+  let sql = 'SELECT login_time,login_count FROM t_user WHERE is_delete = 0 AND type = 1 AND (username = ? OR phone = ? OR email = ?)'
+  let sqlParams = [username, username, username]
   return new Promise((resolve, reject) => {
-    db.connection.query(sql, username, (error, result) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
         console.error('获取用户上次登录时间和次数异常')
         reject(error)
@@ -102,10 +103,10 @@ const getAdminLastLoginInfo = async (username) => {
 
 // 更新用户登录时间、上次登录时间、登录次数
 const updateAdminLoginInfo = async (login_time, login_count, username) => {
-  let sql = 'UPDATE t_user SET login_time = NOW(),last_login_time = ?,login_count = ? WHERE is_delete = 0 AND type = 1 AND username = ?'
+  let sql = 'UPDATE t_user SET login_time = NOW(),last_login_time = ?,login_count = ? WHERE is_delete = 0 AND type = 1 AND (username = ? OR phone = ? OR email = ?)'
   let last_login_time = login_time
   login_count += 1
-  let sqlParams = [last_login_time, login_count, username]
+  let sqlParams = [last_login_time, login_count, username, username, username]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {

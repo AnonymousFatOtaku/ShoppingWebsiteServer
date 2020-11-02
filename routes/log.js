@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 const logService = require("../service/logService");
+const userService = require("../service/userService");
 
 // 添加日志
 router.post('/addLog', async function (req, res) {
