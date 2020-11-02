@@ -15,6 +15,8 @@ const addLog = async (operateType, username) => {
 
   } else if (operateType === 4) {// 登录
     operate_content = username + "成功登录"
+  } else if (operateType === 5) {// 注册
+    operate_content = username + "成功注册"
   }
   let sqlParams = [operateType, operate_content, username]
   return new Promise((resolve, reject) => {

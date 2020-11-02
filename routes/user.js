@@ -4,12 +4,24 @@ var router = express.Router();
 const userService = require("../service/userService");
 const logService = require("../service/logService");
 
-// 添加用户
+/*
+* 添加用户
+* 1.获取用户名、密码、电话号码、邮箱
+* 2.分别验证用户名、电话号码、邮箱是否已存在，若存在则返回提示
+* 3.添加用户信息到数据库
+* 4.添加注册日志
+* */
 router.post('/addUser', async function (req, res) {
-  // 读取请求参数数据
-  const {username, password} = req.body
-  const data = await userService.addUser(username, password);
-  res.send(data);
+  const {username, password, phone, email} = req.body
+  const user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
+  if (user[0]) {
+    // console.log(user[0])
+    res.send({status: 1, msg: '用户信息已存在'})
+  } else {
+    const data = await userService.addUser(username, password, phone, email);
+    await logService.addLog(5, username)
+    res.send({status: 0, data: data});
+  }
 })
 
 // 获取所有用户列表

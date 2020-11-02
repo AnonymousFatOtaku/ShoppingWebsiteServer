@@ -2,8 +2,14 @@
 const userDao = require("../dao/userDao");
 
 // 添加用户
-const addUser = async (username, password) => {
-  let data = await userDao.addUser(username, password)
+const addUser = async (username, password, phone, email) => {
+  let data = await userDao.addUser(username, password, phone, email)
+  return data
+}
+
+// 根据用户名、电话、邮箱查询用户信息是否已存在
+const getUserByUsernameAndPhoneAndEmail = async (username, phone, email) => {
+  let data = await userDao.getUserByUsernameAndPhoneAndEmail(username, phone, email)
   return data
 }
 
@@ -43,4 +49,13 @@ const updateUserLoginInfo = async (login_time, login_count, username) => {
   return data
 }
 
-module.exports = {getAllUsers, addUser, updateUser, deleteUser, userLogin, getUserLastLoginInfo, updateUserLoginInfo}
+module.exports = {
+  getAllUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  userLogin,
+  getUserLastLoginInfo,
+  updateUserLoginInfo,
+  getUserByUsernameAndPhoneAndEmail
+}

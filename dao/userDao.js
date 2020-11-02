@@ -2,9 +2,9 @@
 let db = require('../dao/db');
 
 // 添加用户
-const addUser = async (username, password) => {
-  let sql = 'INSERT INTO t_user(username,password,phone,email,login_time,last_login_time,gmt_create,gmt_modified) VALUES (?,MD5(?),"13000000000","aaa@aa.aa",NOW(),NOW(),NOW(),NOW())'
-  let sqlParams = [username, password]
+const addUser = async (username, password, phone, email) => {
+  let sql = 'INSERT INTO t_user(username,password,phone,email,login_time,last_login_time,gmt_create,gmt_modified) VALUES (?,MD5(?),?,?,NOW(),NOW(),NOW(),NOW())'
+  let sqlParams = [username, password, phone, email]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
@@ -12,6 +12,23 @@ const addUser = async (username, password) => {
         reject(error)
       } else {
         console.error('添加用户正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 根据用户名、电话、邮箱查询用户信息是否已存在
+const getUserByUsernameAndPhoneAndEmail = async (username, phone, email) => {
+  let sql = 'SELECT username,phone,email FROM t_user WHERE is_delete = 0 AND type = 0 AND ((username = ?  OR username = ?) OR phone = ? OR email = ?)'
+  let sqlParams = [username, phone, phone, email]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('根据用户名、电话、邮箱查询用户信息是否已存在异常')
+        reject(error)
+      } else {
+        console.error('根据用户名、电话、邮箱查询用户信息是否已存在正常')
         resolve(result)
       }
     })
@@ -120,4 +137,13 @@ const updateUserLoginInfo = async (login_time, login_count, username) => {
   })
 }
 
-module.exports = {getAllUsers, addUser, updateUser, deleteUser, userLogin, getUserLastLoginInfo, updateUserLoginInfo}
+module.exports = {
+  getAllUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  userLogin,
+  getUserLastLoginInfo,
+  updateUserLoginInfo,
+  getUserByUsernameAndPhoneAndEmail
+}
