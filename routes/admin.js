@@ -42,6 +42,7 @@ router.post('/deleteAdmin', async function (req, res) {
 router.post('/adminLogin', async function (req, res) {
   const {username, password} = req.body
   const user = await adminService.adminLogin(username, password);
+  // console.log(user)
   if (user[0]) {// 登录成功
     // 获取用户上次登录时间和次数
     const adminLastLoginInfo = await adminService.getAdminLastLoginInfo(user[0].username)
@@ -50,7 +51,7 @@ router.post('/adminLogin', async function (req, res) {
     await adminService.updateAdminLoginInfo(adminLastLoginInfo[0].login_time, adminLastLoginInfo[0].login_count, user[0].username)
     // 添加登录日志
     await logService.addLog(4, user[0].username)
-    res.send({status: 0, data: user});
+    res.send({status: 0, data: user[0]});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})
   }
