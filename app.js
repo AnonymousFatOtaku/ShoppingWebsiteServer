@@ -10,6 +10,8 @@ let db = require('./dao/db');
 let user = require('./routes/user');
 let log = require('./routes/log');
 let admin = require('./routes/admin');
+let role = require('./routes/role');
+let right = require('./routes/right');
 
 let app = express();
 
@@ -29,6 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/user', user);
 app.use('/log', log);
 app.use('/admin', admin);
+app.use('/role', role);
+app.use('/right', right);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
