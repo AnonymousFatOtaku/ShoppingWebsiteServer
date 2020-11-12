@@ -10,24 +10,31 @@ router.post('/addRole', async function (req, res) {
   res.send(data);
 })
 
-// 获取所有用户列表
+// 获取所有角色列表
 router.get('/getAllRoles', async function (req, res) {
   const data = await roleService.getAllRoles();
   res.send(data);
 });
 
-// 更新用户
+// 更新角色
 router.post('/updateRole', async function (req, res) {
   const {name, description, pk_role_id} = req.body
   const data = await roleService.updateRole(name, description, pk_role_id);
   res.send(data);
 })
 
-// 删除用户
+// 删除角色
 router.post('/deleteRole', async function (req, res) {
   const {pk_role_id} = req.body
   const data = await roleService.deleteRole(pk_role_id);
   res.send(data);
 })
+
+// 根据用户id获取用户角色
+router.get('/getRoleByUserId', async function (req, res) {
+  const {pk_user_id} = req.query
+  const data = await roleService.getRoleByUserId(pk_user_id);
+  res.send(data);
+});
 
 module.exports = router;

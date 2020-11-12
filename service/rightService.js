@@ -25,9 +25,16 @@ const deleteRight = async (pk_right_id) => {
   return data
 }
 
+// 根据角色id获取相应权限
+const getRightsByRoleId = async (roleId) => {
+  let data = await rightDao.getRightsByRoleId(roleId)
+  return data
+}
+
 module.exports = {
   addRight,
   getAllRights,
   updateRight,
   deleteRight,
+  getRightsByRoleId,
 }

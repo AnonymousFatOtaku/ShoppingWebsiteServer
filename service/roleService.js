@@ -25,9 +25,16 @@ const deleteRole = async (pk_role_id) => {
   return data
 }
 
+// 根据用户id获取用户角色
+const getRoleByUserId = async (pk_user_id) => {
+  let data = await roleDao.getRoleByUserId(pk_user_id)
+  return data
+}
+
 module.exports = {
   addRole,
   getAllRoles,
   updateRole,
   deleteRole,
+  getRoleByUserId,
 }

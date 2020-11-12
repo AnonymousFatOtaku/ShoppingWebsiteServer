@@ -67,9 +67,26 @@ const deleteRight = async (pk_right_id) => {
   })
 }
 
+// 根据角色id获取相应权限
+const getRightsByRoleId = async (roleId) => {
+  let sql = 'SELECT fk_right_id,right_type FROM t_role_right_relation WHERE is_delete = 0 AND fk_role_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, roleId, (error, result) => {
+      if (error) {
+        console.log('根据角色id获取相应权限异常')
+        reject(error)
+      } else {
+        console.log('根据角色id获取相应权限正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addRight,
   getAllRights,
   updateRight,
   deleteRight,
+  getRightsByRoleId,
 }
