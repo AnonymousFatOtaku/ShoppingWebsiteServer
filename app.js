@@ -12,6 +12,8 @@ let log = require('./routes/log');
 let admin = require('./routes/admin');
 let role = require('./routes/role');
 let right = require('./routes/right');
+// 引入jwt token工具
+let JwtUtil = require('./public/utils/jwtUtils');
 
 let app = express();
 
@@ -27,6 +29,27 @@ app.use(express.json()); // 请求体参数是json结构:{name:tom,pwd:123}
 app.use(express.urlencoded({extended: true})); // 请求体参数是:name=tom&pwd=123
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 登录拦截器，必须放在静态资源声明之后、路由导航之前
+app.use(function (req, res, next) {
+  // 我这里知识把登陆和注册请求去掉了，其他的多有请求都需要进行token校验
+  if (req.url != '/user/addUser' && req.url != '/user/userLogin' && req.url != '/admin/adminLogin') {
+    let token = req.headers.token;
+    console.log(token)
+    let jwt = new JwtUtil(token);
+    let result = jwt.verifyToken();
+    // 如果考验通过就next，否则就返回登陆信息不正确
+    if (result == 'err') {
+      console.log(result);
+      res.send({status: 403, msg: '未登录或登录已过期，请重新登录'});
+      // res.render('login.html');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 app.use('/user', user);
 app.use('/log', log);

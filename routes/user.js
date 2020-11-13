@@ -1,8 +1,11 @@
 // 控制层/路由处理层代码，解析request请求的参数，做一些合法性的校验，如果参数不合法，直接向表示层响应异常状态码。如果参数合法，异步调用Service业务层
 var express = require('express');
 var router = express.Router();
+const jwt = require('jsonwebtoken');
 const userService = require("../service/userService");
 const logService = require("../service/logService");
+// 引入jwt token工具
+let JwtUtil = require('../public/utils/jwtUtils');
 
 /*
 * 添加用户
@@ -26,6 +29,15 @@ router.post('/addUser', async function (req, res) {
 
 // 获取所有用户列表
 router.get('/getAllUsers', async function (req, res) {
+  // let token = req.headers.token;
+  // console.log(token)
+  // let jwtUtil = new JwtUtil(token)
+  // let result = jwtUtil.verifyToken()
+  // console.log(result)
+  // let {exp = 0} = result, current = Math.floor(Date.now() / 1000);
+  // if (current <= exp) {
+  //   res = result.data || {};
+  // }
   const data = await userService.getAllUsers();
   res.send(data);
 });
@@ -62,7 +74,12 @@ router.post('/userLogin', async function (req, res) {
     await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, user[0].username)
     // 添加登录日志
     await logService.addLog(4, user[0].username)
-    res.send({status: 0, data: user});
+    // 生成token
+    let jwtUtil = new JwtUtil(username)
+    let token = jwtUtil.generateToken()
+    console.log(token)
+    // 将token返回给客户端
+    res.send({status: 0, data: user, token: token});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})
   }

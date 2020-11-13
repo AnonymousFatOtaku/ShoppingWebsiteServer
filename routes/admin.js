@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 const adminService = require("../service/adminService");
 const logService = require("../service/logService");
+// 引入jwt token工具
+let JwtUtil = require('../public/utils/jwtUtils');
 
 // 添加用户
 router.post('/addAdmin', async function (req, res) {
@@ -51,7 +53,12 @@ router.post('/adminLogin', async function (req, res) {
     await adminService.updateAdminLoginInfo(adminLastLoginInfo[0].login_time, adminLastLoginInfo[0].login_count, user[0].username)
     // 添加登录日志
     await logService.addLog(4, user[0].username)
-    res.send({status: 0, data: user[0]});
+    // 生成token
+    let jwtUtil = new JwtUtil(username)
+    let token = jwtUtil.generateToken()
+    console.log(token)
+    // 将token返回给客户端
+    res.send({status: 0, data: user[0], token: token});
   } else {// 登录失败
     res.send({status: 1, msg: '用户名或密码不正确'})
   }
