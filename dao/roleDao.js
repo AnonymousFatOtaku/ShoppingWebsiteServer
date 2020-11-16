@@ -20,7 +20,7 @@ const addRole = async (parent_role_id, name, description) => {
 
 // 获取所有角色列表
 const getAllRoles = async () => {
-  let sql = 'SELECT pk_role_id,parent_role_id,name,description FROM t_role WHERE is_delete = 0'
+  let sql = 'SELECT pk_role_id,parent_role_id,name,description,gmt_create,gmt_modified FROM t_role WHERE is_delete = 0'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, (error, result) => {
       if (error) {

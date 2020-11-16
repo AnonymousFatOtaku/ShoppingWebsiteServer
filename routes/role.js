@@ -13,7 +13,7 @@ router.post('/addRole', async function (req, res) {
 // 获取所有角色列表
 router.get('/getAllRoles', async function (req, res) {
   const data = await roleService.getAllRoles();
-  res.send(data);
+  res.send({status: 0, data: data});
 });
 
 // 更新角色
@@ -34,7 +34,7 @@ router.post('/deleteRole', async function (req, res) {
 router.get('/getRoleByUserId', async function (req, res) {
   const {pk_user_id} = req.query
   const data = await roleService.getRoleByUserId(pk_user_id);
-  res.send(data);
+  res.send({status: 0, data: data});
 });
 
 module.exports = router;
