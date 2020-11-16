@@ -1,7 +1,7 @@
 // 控制层/路由处理层代码，解析request请求的参数，做一些合法性的校验，如果参数不合法，直接向表示层响应异常状态码。如果参数合法，异步调用Service业务层
-var express = require('express');
-var router = express.Router();
-const jwt = require('jsonwebtoken');
+const express = require('express');
+const router = express.Router();
+const validator = require('validator');
 const userService = require("../service/userService");
 const logService = require("../service/logService");
 // 引入jwt token工具
@@ -16,28 +16,30 @@ let JwtUtil = require('../public/utils/jwtUtils');
 * */
 router.post('/addUser', async function (req, res) {
   const {username, password, phone, email} = req.body
-  const user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
-  if (user[0]) {
-    // console.log(user[0])
-    res.send({status: 1, msg: '用户信息已存在'})
-  } else {
-    const data = await userService.addUser(username, password, phone, email);
-    await logService.addLog(5, username)
-    res.send({status: 0, data: data});
+  // 验证获取到的数据是否符合规范
+  if (!validator.matches(username, /^[a-zA-Z0-9_]{3,12}$/)) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '用户名格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(password, /^[a-zA-Z0-9_]{3,12}$/)) {
+    res.send({status: 1, msg: '密码格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(phone, /^1[3456789]\d{9}$/)) {
+    res.send({status: 1, msg: '手机号格式不正确，请检查后重新输入'})
+  } else if (!validator.isEmail(email)) { // 通过isEmail进行邮箱验证
+    res.send({status: 1, msg: '邮箱格式不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
+    if (user[0]) {
+      // console.log(user[0])
+      res.send({status: 1, msg: '用户信息已存在'})
+    } else {
+      const data = await userService.addUser(username, password, phone, email);
+      await logService.addLog(5, username)
+      res.send({status: 0, data: data});
+    }
   }
 })
 
 // 获取所有用户列表
 router.get('/getAllUsers', async function (req, res) {
-  // let token = req.headers.token;
-  // console.log(token)
-  // let jwtUtil = new JwtUtil(token)
-  // let result = jwtUtil.verifyToken()
-  // console.log(result)
-  // let {exp = 0} = result, current = Math.floor(Date.now() / 1000);
-  // if (current <= exp) {
-  //   res = result.data || {};
-  // }
   const data = await userService.getAllUsers();
   res.send(data);
 });
@@ -65,23 +67,30 @@ router.post('/deleteUser', async function (req, res) {
 * */
 router.post('/userLogin', async function (req, res) {
   const {username, password} = req.body
-  const user = await userService.userLogin(username, password);
-  if (user[0]) {// 登录成功
-    // 获取用户上次登录时间和次数
-    const userLastLoginInfo = await userService.getUserLastLoginInfo(user[0].username)
-    // console.log(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count)
-    // 更新用户登录时间、上次登录时间、登录次数
-    await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, user[0].username)
-    // 添加登录日志
-    await logService.addLog(4, user[0].username)
-    // 生成token
-    let jwtUtil = new JwtUtil(user[0].pk_user_id,user[0].username)
-    let token = jwtUtil.generateToken()
-    console.log(token)
-    // 将token返回给客户端
-    res.send({status: 0, data: user, token: token});
-  } else {// 登录失败
-    res.send({status: 1, msg: '用户名或密码不正确'})
+  // 验证获取到的数据是否符合规范
+  if (!validator.matches(username, /^[a-zA-Z0-9_]{3,12}$/)) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '用户名格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(password, /^[a-zA-Z0-9_]{3,12}$/)) {
+    res.send({status: 1, msg: '密码格式不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const user = await userService.userLogin(username, password);
+    if (user[0]) {// 登录成功
+      // 获取用户上次登录时间和次数
+      const userLastLoginInfo = await userService.getUserLastLoginInfo(user[0].username)
+      // console.log(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count)
+      // 更新用户登录时间、上次登录时间、登录次数
+      await userService.updateUserLoginInfo(userLastLoginInfo[0].login_time, userLastLoginInfo[0].login_count, user[0].username)
+      // 添加登录日志
+      await logService.addLog(4, user[0].username)
+      // 生成token
+      let jwtUtil = new JwtUtil(user[0].pk_user_id, user[0].username)
+      let token = jwtUtil.generateToken()
+      console.log(token)
+      // 将token返回给客户端
+      res.send({status: 0, data: user, token: token});
+    } else {// 登录失败
+      res.send({status: 1, msg: '用户名或密码不正确'})
+    }
   }
 })
 
