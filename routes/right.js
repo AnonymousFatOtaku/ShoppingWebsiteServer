@@ -42,7 +42,7 @@ router.get('/getRightsByUserId', async function (req, res) {
   const role = await roleService.getRoleByUserId(pk_user_id)
   const roleId = role[0].fk_role_id
   const rights = await rightService.getRightsByRoleId(roleId)
-  console.log(rights)
+  // console.log(rights)
   res.send(rights)
 })
 

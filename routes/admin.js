@@ -54,7 +54,7 @@ router.post('/adminLogin', async function (req, res) {
     // 添加登录日志
     await logService.addLog(4, user[0].username)
     // 生成token
-    let jwtUtil = new JwtUtil(username)
+    let jwtUtil = new JwtUtil(user[0].pk_user_id,user[0].username)
     let token = jwtUtil.generateToken()
     console.log(token)
     // 将token返回给客户端

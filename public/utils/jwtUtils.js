@@ -13,8 +13,8 @@ class JwtUtils {
 
   // 生成token
   generateToken() {
-    let username = this.data;
-    let token = jwt.sign({username}, PRIVITE_KEY, {expiresIn: EXPIRESD});
+    let {pk_user_id, username} = this.data;
+    let token = jwt.sign({pk_user_id, username}, PRIVITE_KEY, {expiresIn: EXPIRESD});
     return token;
   }
 
