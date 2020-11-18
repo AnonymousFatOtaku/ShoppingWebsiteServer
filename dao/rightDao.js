@@ -83,10 +83,46 @@ const getRightsByRoleId = async (roleId) => {
   })
 }
 
+// 删除角色拥有的权限
+const deleteRoleRights = async (pk_role_id, item) => {
+  let sql = 'UPDATE t_role_right_relation SET is_delete = 1,gmt_modified = NOW() WHERE fk_role_id = ? AND fk_right_id = ?'
+  let sqlParams = [pk_role_id, item]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('删除角色拥有的权限异常')
+        reject(error)
+      } else {
+        console.error('删除角色拥有的权限正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 添加角色拥有的权限
+const addRoleRights = async (pk_role_id, item) => {
+  let sql = 'INSERT INTO t_role_right_relation(fk_role_id,fk_right_id) VALUES (?,?)'
+  let sqlParams = [pk_role_id, item]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('添加角色拥有的权限异常')
+        reject(error)
+      } else {
+        console.error('添加角色拥有的权限正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addRight,
   getAllRights,
   updateRight,
   deleteRight,
   getRightsByRoleId,
+  deleteRoleRights,
+  addRoleRights,
 }

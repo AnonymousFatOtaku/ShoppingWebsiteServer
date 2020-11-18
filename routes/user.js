@@ -41,7 +41,7 @@ router.post('/addUser', async function (req, res) {
 // 获取所有用户列表
 router.get('/getAllUsers', async function (req, res) {
   const data = await userService.getAllUsers();
-  res.send(data);
+  res.send({status: 0, data: data});
 });
 
 // 更新用户

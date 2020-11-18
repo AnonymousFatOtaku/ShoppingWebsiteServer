@@ -46,4 +46,12 @@ router.get('/getRightsByUserId', async function (req, res) {
   res.send(rights)
 })
 
+// 根据角色id获取权限
+router.get('/getRightsByRoleId', async function (req, res) {
+  const {pk_role_id} = req.query
+  const rights = await rightService.getRightsByRoleId(pk_role_id)
+  // console.log(rights)
+  res.send(rights)
+})
+
 module.exports = router;

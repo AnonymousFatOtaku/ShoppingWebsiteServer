@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 const validator = require('validator');
 const roleService = require("../service/roleService");
+const rightService = require("../service/rightService");
 
 // 添加角色
 router.post('/addRole', async function (req, res) {
@@ -46,5 +47,43 @@ router.get('/getRoleByUserId', async function (req, res) {
   const data = await roleService.getRoleByUserId(pk_user_id);
   res.send({status: 0, data: data});
 });
+
+/*
+* 根据角色id更新角色权限
+* 1.接收角色id和对应的权限数组
+* 2.获取该角色现有权限数组
+* 3.对比新旧权限，删除旧数组有新数组没有的权限，添加新数组有旧数组没有的权限
+* */
+router.post('/updateRoleRights', async function (req, res) {
+  let {pk_role_id, menus} = req.body
+  console.log(pk_role_id, menus)
+  const rights = await rightService.getRightsByRoleId(pk_role_id)
+
+  let oldMenus = []
+  for (let i = 0; i < rights.length; i++) {
+    oldMenus.push(rights[i].fk_right_id)
+  }
+
+  let newMenus = []
+  menus.toString().split(",").forEach(function (item) {
+    newMenus.push(parseInt(item));
+  })
+  console.log(newMenus, oldMenus)
+
+  oldMenus.forEach(async function (item) {
+    if (newMenus.indexOf(item) === -1) {
+      console.log(item)
+      await rightService.deleteRoleRights(pk_role_id, item)
+    }
+  })
+
+  newMenus.forEach(async function (item) {
+    if (oldMenus.indexOf(item) === -1) {
+      console.log(item)
+      await rightService.addRoleRights(pk_role_id, item)
+    }
+  })
+  res.send({status: 0});
+})
 
 module.exports = router;

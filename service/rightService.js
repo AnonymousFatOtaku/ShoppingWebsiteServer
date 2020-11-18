@@ -31,10 +31,24 @@ const getRightsByRoleId = async (roleId) => {
   return data
 }
 
+// 删除角色拥有的权限
+const deleteRoleRights = async (pk_role_id, item) => {
+  let data = await rightDao.deleteRoleRights(pk_role_id, item)
+  return data
+}
+
+// 添加角色拥有的权限
+const addRoleRights = async (pk_role_id, item) => {
+  let data = await rightDao.addRoleRights(pk_role_id, item)
+  return data
+}
+
 module.exports = {
   addRight,
   getAllRights,
   updateRight,
   deleteRight,
   getRightsByRoleId,
+  deleteRoleRights,
+  addRoleRights,
 }

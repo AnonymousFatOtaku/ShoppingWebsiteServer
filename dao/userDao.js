@@ -37,7 +37,7 @@ const getUserByUsernameAndPhoneAndEmail = async (username, phone, email) => {
 
 // 获取所有用户列表
 const getAllUsers = async () => {
-  let sql = 'SELECT username,phone,email,login_time FROM t_user WHERE is_delete = 0'
+  let sql = 'SELECT pk_user_id,username,phone,email,login_time,last_login_time,login_count,type,gmt_create,gmt_modified FROM t_user WHERE is_delete = 0'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, (error, result) => {
       if (error) {
