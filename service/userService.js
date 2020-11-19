@@ -20,8 +20,8 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (username, password) => {
-  let data = await userDao.updateUser(username, password)
+const updateUser = async (pk_user_id, username, password, phone, email, type) => {
+  let data = await userDao.updateUser(pk_user_id, username, password, phone, email, type)
   return data
 }
 

@@ -83,10 +83,28 @@ const getRoleByUserId = async (pk_user_id) => {
   })
 }
 
+// 更新用户的角色
+const updateRoleByUserId = async (pk_user_id, role_id) => {
+  let sql = 'UPDATE t_user_role_relation SET fk_role_id = ?,gmt_modified = NOW() WHERE is_delete = 0 AND fk_user_id = ?'
+  let sqlParams = [role_id, pk_user_id]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新角色异常')
+        reject(error)
+      } else {
+        console.error('更新角色正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addRole,
   getAllRoles,
   updateRole,
   deleteRole,
   getRoleByUserId,
+  updateRoleByUserId,
 }

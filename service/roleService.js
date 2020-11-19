@@ -31,10 +31,17 @@ const getRoleByUserId = async (pk_user_id) => {
   return data
 }
 
+// 更新用户的角色
+const updateRoleByUserId = async (pk_user_id, role_id) => {
+  let data = await roleDao.updateRoleByUserId(pk_user_id, role_id)
+  return data
+}
+
 module.exports = {
   addRole,
   getAllRoles,
   updateRole,
   deleteRole,
   getRoleByUserId,
+  updateRoleByUserId,
 }

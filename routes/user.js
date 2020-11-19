@@ -4,6 +4,7 @@ const router = express.Router();
 const validator = require('validator');
 const userService = require("../service/userService");
 const logService = require("../service/logService");
+const roleService = require("../service/roleService");
 // 引入jwt token工具
 let JwtUtil = require('../public/utils/jwtUtils');
 
@@ -46,9 +47,17 @@ router.get('/getAllUsers', async function (req, res) {
 
 // 更新用户
 router.post('/updateUser', async function (req, res) {
-  const {username, password} = req.body
-  const data = await userService.updateUser(username, password);
-  res.send(data);
+  const {pk_user_id, username, password, phone, email, role_id} = req.body
+  console.log(pk_user_id, username, password, phone, email, role_id)
+
+  // 判断用户类型为普通用户还是管理员
+  let type = 0
+  if (role_id != 6) {
+    type = 1
+  }
+  const data = await userService.updateUser(pk_user_id, username, password, phone, email, type);
+  const result = await roleService.updateRoleByUserId(pk_user_id, role_id);
+  res.send({status: 0});
 })
 
 // 删除用户

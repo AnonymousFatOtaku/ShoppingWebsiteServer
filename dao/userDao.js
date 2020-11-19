@@ -52,9 +52,9 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (username, password) => {
-  let sql = 'UPDATE t_user SET password = MD5(?) WHERE username = ?'
-  let sqlParams = [password, username]
+const updateUser = async (pk_user_id, username, password, phone, email, type) => {
+  let sql = 'UPDATE t_user SET username = ?, password = MD5(?), phone = ?, email = ?, type = ?, gmt_modified = NOW() WHERE pk_user_id = ?'
+  let sqlParams = [username, password, phone, email, type, pk_user_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {

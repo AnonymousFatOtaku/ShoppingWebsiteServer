@@ -86,4 +86,11 @@ router.post('/updateRoleRights', async function (req, res) {
   res.send({status: 0});
 })
 
+// 更新用户的角色
+router.post('/updateRoleByUserId', async function (req, res) {
+  const {pk_user_id, role_id} = req.body
+  const data = await roleService.updateRoleByUserId(pk_user_id, role_id);
+  res.send(data);
+})
+
 module.exports = router;
