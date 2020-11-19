@@ -39,19 +39,27 @@ router.post('/deleteRight', async function (req, res) {
 * */
 router.get('/getRightsByUserId', async function (req, res) {
   const {pk_user_id} = req.query
-  const role = await roleService.getRoleByUserId(pk_user_id)
-  const roleId = role[0].fk_role_id
-  const rights = await rightService.getRightsByRoleId(roleId)
-  // console.log(rights)
-  res.send(rights)
+  if (!validator.isInt(pk_user_id)) {
+    res.send({status: 1, msg: '用户id格式不正确，请检查后重新输入'})
+  } else {
+    const role = await roleService.getRoleByUserId(pk_user_id)
+    const roleId = role[0].fk_role_id
+    const rights = await rightService.getRightsByRoleId(roleId)
+    // console.log(rights)
+    res.send(rights)
+  }
 })
 
 // 根据角色id获取权限
 router.get('/getRightsByRoleId', async function (req, res) {
   const {pk_role_id} = req.query
-  const rights = await rightService.getRightsByRoleId(pk_role_id)
-  // console.log(rights)
-  res.send(rights)
+  if (!validator.isInt(pk_role_id)) {
+    res.send({status: 1, msg: '角色id格式不正确，请检查后重新输入'})
+  } else {
+    const rights = await rightService.getRightsByRoleId(pk_role_id)
+    // console.log(rights)
+    res.send(rights)
+  }
 })
 
 module.exports = router;

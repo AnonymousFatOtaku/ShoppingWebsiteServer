@@ -26,8 +26,8 @@ const updateUser = async (pk_user_id, username, password, phone, email, type) =>
 }
 
 // 删除用户
-const deleteUser = async (username) => {
-  let data = await userDao.deleteUser(username)
+const deleteUser = async (pk_user_id) => {
+  let data = await userDao.deleteUser(pk_user_id)
   return data
 }
 

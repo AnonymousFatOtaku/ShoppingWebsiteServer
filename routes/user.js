@@ -50,21 +50,40 @@ router.post('/updateUser', async function (req, res) {
   const {pk_user_id, username, password, phone, email, role_id} = req.body
   console.log(pk_user_id, username, password, phone, email, role_id)
 
-  // 判断用户类型为普通用户还是管理员
-  let type = 0
-  if (role_id != 6) {
-    type = 1
+  // 验证获取到的数据是否符合规范
+  if (!validator.isInt(pk_user_id)) {
+    res.send({status: 1, msg: '用户id格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(username, /^[a-zA-Z0-9_]{3,12}$/)) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '用户名格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(password, /^[a-zA-Z0-9_]{3,12}$/)) {
+    res.send({status: 1, msg: '密码格式不正确，请检查后重新输入'})
+  } else if (!validator.matches(phone, /^1[3456789]\d{9}$/)) {
+    res.send({status: 1, msg: '手机号格式不正确，请检查后重新输入'})
+  } else if (!validator.isEmail(email)) { // 通过isEmail进行邮箱验证
+    res.send({status: 1, msg: '邮箱格式不正确，请检查后重新输入'})
+  } else if (!validator.isInt(role_id)) {
+    res.send({status: 1, msg: '角色id格式不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    // 判断用户类型为普通用户还是管理员
+    let type = 0
+    if (role_id != 6) {
+      type = 1
+    }
+    const data = await userService.updateUser(pk_user_id, username, password, phone, email, type);
+    const result = await roleService.updateRoleByUserId(pk_user_id, role_id);
+    res.send({status: 0});
   }
-  const data = await userService.updateUser(pk_user_id, username, password, phone, email, type);
-  const result = await roleService.updateRoleByUserId(pk_user_id, role_id);
-  res.send({status: 0});
 })
 
 // 删除用户
 router.post('/deleteUser', async function (req, res) {
-  const {username} = req.body
-  const data = await userService.deleteUser(username);
-  res.send(data);
+  const {pk_user_id} = req.body
+  if (!validator.isInt(pk_user_id)) {
+    res.send({status: 1, msg: '用户id格式不正确，请检查后重新输入'})
+  } else {
+    const data = await userService.deleteUser(pk_user_id);
+    res.send({status: 0, data: data});
+  }
 })
 
 /*
