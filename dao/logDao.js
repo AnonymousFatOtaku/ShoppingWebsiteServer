@@ -2,8 +2,8 @@
 let db = require('../dao/db');
 
 // 添加日志
-const addLog = async (operateType, username) => {
-  let sql = 'INSERT INTO t_log(operate_type,operate_content,fk_username) VALUES (?,?,?)'
+const addLog = async (operateType, pk_user_id) => {
+  let sql = 'INSERT INTO t_log(operate_type,operate_content,fk_user_id) VALUES (?,?,?)'
   let operate_content
   if (operateType === 0) {// 增
 
@@ -18,7 +18,7 @@ const addLog = async (operateType, username) => {
   } else if (operateType === 5) {// 注册
     operate_content = "成功注册"
   }
-  let sqlParams = [operateType, operate_content, username]
+  let sqlParams = [operateType, operate_content, pk_user_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {

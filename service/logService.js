@@ -2,8 +2,8 @@
 const logDao = require("../dao/logDao");
 
 // 添加日志
-const addLog = async (operateType, username) => {
-  let data = await logDao.addLog(operateType, username)
+const addLog = async (operateType, pk_user_id) => {
+  let data = await logDao.addLog(operateType, pk_user_id)
   return data
 }
 

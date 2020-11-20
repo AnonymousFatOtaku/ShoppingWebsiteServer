@@ -51,7 +51,7 @@ router.post('/adminLogin', async function (req, res) {
     res.send({status: 1, msg: '密码格式不正确，请检查后重新输入'})
   } else { // 所有数据验证通过才进行数据库操作
     const user = await adminService.adminLogin(username, password);
-    // console.log(user)
+    console.log(user)
     if (user[0]) {// 登录成功
       // 获取用户上次登录时间和次数
       const adminLastLoginInfo = await adminService.getAdminLastLoginInfo(user[0].username)
@@ -59,7 +59,7 @@ router.post('/adminLogin', async function (req, res) {
       // 更新用户登录时间、上次登录时间、登录次数
       await adminService.updateAdminLoginInfo(adminLastLoginInfo[0].login_time, adminLastLoginInfo[0].login_count, user[0].username)
       // 添加登录日志
-      await logService.addLog(4, user[0].username)
+      await logService.addLog(4, user[0].pk_user_id)
       // 生成token
       let jwtUtil = new JwtUtil(user[0].pk_user_id, user[0].username)
       let token = jwtUtil.generateToken()
