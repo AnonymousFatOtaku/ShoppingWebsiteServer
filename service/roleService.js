@@ -37,6 +37,12 @@ const updateRoleByUserId = async (pk_user_id, role_id) => {
   return data
 }
 
+// 获取用户角色关联信息
+const getUserRoles = async () => {
+  let data = await roleDao.getUserRoles()
+  return data
+}
+
 module.exports = {
   addRole,
   getAllRoles,
@@ -44,4 +50,5 @@ module.exports = {
   deleteRole,
   getRoleByUserId,
   updateRoleByUserId,
+  getUserRoles,
 }

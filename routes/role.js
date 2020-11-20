@@ -107,4 +107,10 @@ router.post('/updateRoleByUserId', async function (req, res) {
   }
 })
 
+// 获取用户角色关联信息
+router.get('/getUserRoles', async function (req, res) {
+  const data = await roleService.getUserRoles();
+  res.send({status: 0, data: data});
+});
+
 module.exports = router;

@@ -70,7 +70,7 @@ const updateUser = async (pk_user_id, username, password, phone, email, type) =>
 
 // 删除用户
 const deleteUser = async (pk_user_id) => {
-  let sql = 'UPDATE t_user SET is_delete = 1 WHERE pk_user_id = ?;'
+  let sql = 'UPDATE t_user SET is_delete = 1 WHERE pk_user_id = ?'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, pk_user_id, (error, result) => {
       if (error) {

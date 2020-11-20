@@ -100,6 +100,22 @@ const updateRoleByUserId = async (pk_user_id, role_id) => {
   })
 }
 
+// 获取用户角色关联信息
+const getUserRoles = async () => {
+  let sql = 'SELECT fk_user_id,fk_role_id FROM t_user_role_relation WHERE is_delete = 0'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, (error, result) => {
+      if (error) {
+        console.log('获取用户角色关联信息异常')
+        reject(error)
+      } else {
+        console.log('获取用户角色关联信息正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addRole,
   getAllRoles,
@@ -107,4 +123,5 @@ module.exports = {
   deleteRole,
   getRoleByUserId,
   updateRoleByUserId,
+  getUserRoles,
 }
