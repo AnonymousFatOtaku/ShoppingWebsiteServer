@@ -27,14 +27,21 @@ router.post('/addUser', async function (req, res) {
   } else if (!validator.isEmail(email)) { // 通过isEmail进行邮箱验证
     res.send({status: 1, msg: '邮箱格式不正确，请检查后重新输入'})
   } else { // 所有数据验证通过才进行数据库操作
-    const user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
+    let user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
+    console.log(user)
     if (user[0]) {
       // console.log(user[0])
       res.send({status: 1, msg: '用户信息已存在'})
     } else {
-      const data = await userService.addUser(username, password, phone, email);
-      await logService.addLog(5, username)
-      res.send({status: 0, data: data});
+      // 添加新用户
+      await userService.addUser(username, password, phone, email);
+      // 获取新用户id
+      user = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email)
+      // 根据新用户id创建日志
+      await logService.addLog(5, user[0].pk_user_id)
+      // 根据新用户id创建该用户角色，初始默认为普通用户
+      const result = await userService.addUserRole(user[0].pk_user_id, 6);
+      res.send({status: 0, data: result});
     }
   }
 })

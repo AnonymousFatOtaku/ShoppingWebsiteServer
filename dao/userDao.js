@@ -20,7 +20,7 @@ const addUser = async (username, password, phone, email) => {
 
 // 根据用户名、电话、邮箱查询用户信息是否已存在
 const getUserByUsernameAndPhoneAndEmail = async (username, phone, email) => {
-  let sql = 'SELECT username,phone,email FROM t_user WHERE is_delete = 0 AND type = 0 AND ((username = ?  OR username = ?) OR phone = ? OR email = ?)'
+  let sql = 'SELECT pk_user_id,username,phone,email FROM t_user WHERE is_delete = 0 AND type = 0 AND ((username = ?  OR username = ?) OR phone = ? OR email = ?)'
   let sqlParams = [username, phone, phone, email]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
@@ -137,6 +137,23 @@ const updateUserLoginInfo = async (login_time, login_count, username) => {
   })
 }
 
+// 新增用户角色
+const addUserRole = async (fk_user_id, fk_role_id) => {
+  let sql = 'INSERT INTO t_user_role_relation(fk_user_id,fk_role_id) VALUES (?,?)'
+  let sqlParams = [fk_user_id, fk_role_id]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('新增用户角色异常')
+        reject(error)
+      } else {
+        console.error('新增用户角色正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -145,5 +162,6 @@ module.exports = {
   userLogin,
   getUserLastLoginInfo,
   updateUserLoginInfo,
-  getUserByUsernameAndPhoneAndEmail
+  getUserByUsernameAndPhoneAndEmail,
+  addUserRole,
 }

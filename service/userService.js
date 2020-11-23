@@ -49,6 +49,12 @@ const updateUserLoginInfo = async (login_time, login_count, username) => {
   return data
 }
 
+// 新增用户角色
+const addUserRole = async (fk_user_id, fk_role_id) => {
+  let data = await userDao.addUserRole(fk_user_id, fk_role_id)
+  return data
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -57,5 +63,6 @@ module.exports = {
   userLogin,
   getUserLastLoginInfo,
   updateUserLoginInfo,
-  getUserByUsernameAndPhoneAndEmail
+  getUserByUsernameAndPhoneAndEmail,
+  addUserRole,
 }
