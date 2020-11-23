@@ -1,4 +1,5 @@
 // 商品DAO，只负责数据库操作
+let mysql = require('mysql');
 let db = require('../dao/db');
 
 // 添加商品
@@ -84,10 +85,44 @@ const updateStatus = async (productId, status) => {
   })
 }
 
+// 根据商品名搜索商品
+const searchProductsByProductName = async (searchName) => {
+  let sql = "SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND name LIKE " + mysql.escape("%" + searchName + "%")
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, searchName, (error, result) => {
+      if (error) {
+        console.log('根据商品名搜索商品异常')
+        reject(error)
+      } else {
+        console.log('根据商品名搜索商品正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 根据分类id搜索商品
+const searchProductsByCategoryId = async (searchName) => {
+  let sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND fk_category_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, searchName, (error, result) => {
+      if (error) {
+        console.log('根据分类id搜索商品异常')
+        reject(error)
+      } else {
+        console.log('根据分类id搜索商品正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
   updateStatus,
+  searchProductsByProductName,
+  searchProductsByCategoryId,
 }

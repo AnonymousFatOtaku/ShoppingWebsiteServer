@@ -41,4 +41,17 @@ router.post('/updateStatus', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 根据关键字搜索商品
+router.get('/searchProducts', async function (req, res) {
+  const {searchName, searchType} = req.query
+  console.log(searchName, searchType)
+  let data
+  if (searchType === 'productName') {
+    data = await productService.searchProductsByProductName(searchName);
+  } else if (searchType === 'categoryId') {
+    data = await productService.searchProductsByCategoryId(searchName);
+  }
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

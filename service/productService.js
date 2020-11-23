@@ -31,10 +31,24 @@ const updateStatus = async (productId, status) => {
   return data
 }
 
+// 根据商品名搜索商品
+const searchProductsByProductName = async (searchName) => {
+  let data = await productDao.searchProductsByProductName(searchName)
+  return data
+}
+
+// 根据分类id搜索商品
+const searchProductsByCategoryId = async (searchName) => {
+  let data = await productDao.searchProductsByCategoryId(searchName)
+  return data
+}
+
 module.exports = {
   addProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
   updateStatus,
+  searchProductsByProductName,
+  searchProductsByCategoryId,
 }
