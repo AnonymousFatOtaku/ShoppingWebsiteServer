@@ -52,9 +52,9 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (pk_user_id, username, password, phone, email, type) => {
-  let sql = 'UPDATE t_user SET username = ?, password = MD5(?), phone = ?, email = ?, type = ?, gmt_modified = NOW() WHERE pk_user_id = ?'
-  let sqlParams = [username, password, phone, email, type, pk_user_id]
+const updateUser = async (pk_user_id, username, password, phone, email) => {
+  let sql = 'UPDATE t_user SET username = ?, password = MD5(?), phone = ?, email = ?, gmt_modified = NOW() WHERE pk_user_id = ?'
+  let sqlParams = [username, password, phone, email, pk_user_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
@@ -154,6 +154,40 @@ const addUserRole = async (fk_user_id, fk_role_id) => {
   })
 }
 
+// 更新用户类型
+const updateUserType = async (pk_user_id, type) => {
+  let sql = 'UPDATE t_user SET type = ?, gmt_modified = NOW() WHERE is_delete = 0 AND pk_user_id = ?'
+  let sqlParams = [type, pk_user_id]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新用户类型异常')
+        reject(error)
+      } else {
+        console.error('更新用户类型正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 更新用户角色
+const updateUserRole = async (pk_user_id, role_id) => {
+  let sql = 'UPDATE t_user_role_relation SET fk_role_id = ?,gmt_modified = NOW() WHERE is_delete = 0 AND fk_user_id = ?'
+  let sqlParams = [role_id, pk_user_id]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新用户角色异常')
+        reject(error)
+      } else {
+        console.error('更新用户角色正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -164,4 +198,6 @@ module.exports = {
   updateUserLoginInfo,
   getUserByUsernameAndPhoneAndEmail,
   addUserRole,
+  updateUserType,
+  updateUserRole,
 }

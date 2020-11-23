@@ -20,8 +20,8 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (pk_user_id, username, password, phone, email, type) => {
-  let data = await userDao.updateUser(pk_user_id, username, password, phone, email, type)
+const updateUser = async (pk_user_id, username, password, phone, email) => {
+  let data = await userDao.updateUser(pk_user_id, username, password, phone, email)
   return data
 }
 
@@ -55,6 +55,18 @@ const addUserRole = async (fk_user_id, fk_role_id) => {
   return data
 }
 
+// 更新用户类型
+const updateUserType = async (pk_user_id, type) => {
+  let data = await userDao.updateUserType(pk_user_id, type)
+  return data
+}
+
+// 更新用户角色
+const updateUserRole = async (pk_user_id, role_id) => {
+  let data = await userDao.updateUserRole(pk_user_id, role_id)
+  return data
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -65,4 +77,6 @@ module.exports = {
   updateUserLoginInfo,
   getUserByUsernameAndPhoneAndEmail,
   addUserRole,
+  updateUserType,
+  updateUserRole,
 }
