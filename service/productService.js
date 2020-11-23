@@ -25,9 +25,16 @@ const deleteProduct = async (pk_category_id) => {
   return data
 }
 
+// 更新商品状态
+const updateStatus = async (productId, status) => {
+  let data = await productDao.updateStatus(productId, status)
+  return data
+}
+
 module.exports = {
   addProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
+  updateStatus,
 }

@@ -20,7 +20,7 @@ const addProduct = async (parent_category_id, name, description) => {
 
 // 获取所有商品列表
 const getAllProducts = async () => {
-  let sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,gmt_create,gmt_modified FROM t_product WHERE saleable = 0 AND is_delete = 0'
+  let sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, (error, result) => {
       if (error) {
@@ -67,9 +67,27 @@ const deleteProduct = async (pk_category_id) => {
   })
 }
 
+// 更新商品状态
+const updateStatus = async (productId, status) => {
+  let sql = 'UPDATE t_product SET saleable = ?,gmt_modified = NOW() WHERE pk_product_id = ?'
+  let sqlParams = [status, productId]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新商品状态异常')
+        reject(error)
+      } else {
+        console.error('更新商品状态正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
+  updateStatus,
 }

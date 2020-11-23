@@ -33,4 +33,12 @@ router.post('/deleteProduct', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 更新商品状态
+router.post('/updateStatus', async function (req, res) {
+  let {productId, status} = req.body
+  console.log(productId, status)
+  const data = await productService.updateStatus(productId, status);
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;
