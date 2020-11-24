@@ -31,10 +31,17 @@ const getCategoriesByParentId = async (parent_category_id) => {
   return data
 }
 
+// 根据id获取分类
+const getCategoryById = async (categoryId) => {
+  let data = await categoryDao.getCategoryById(categoryId)
+  return data
+}
+
 module.exports = {
   addCategory,
   getAllCategories,
   updateCategory,
   deleteCategory,
   getCategoriesByParentId,
+  getCategoryById,
 }

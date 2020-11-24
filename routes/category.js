@@ -41,4 +41,13 @@ router.get('/getCategoriesByParentId', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 根据id获取分类
+router.get('/getCategoryById', async function (req, res) {
+  const {categoryId} = req.query
+  // console.log(categoryId)
+  const data = await categoryService.getCategoryById(categoryId);
+  // console.log(data)
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

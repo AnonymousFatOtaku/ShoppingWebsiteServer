@@ -69,7 +69,7 @@ const deleteCategory = async (pk_category_id) => {
 
 // 获取一/二级品类列表
 const getCategoriesByParentId = async (parent_category_id) => {
-  let sql = 'SELECT pk_category_id,name,description,gmt_create,gmt_modified FROM t_category WHERE is_delete = 0 AND parent_category_id = ?'
+  let sql = 'SELECT pk_category_id,parent_category_id,name,description,gmt_create,gmt_modified FROM t_category WHERE is_delete = 0 AND parent_category_id = ?'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, parent_category_id, (error, result) => {
       if (error) {
@@ -83,10 +83,27 @@ const getCategoriesByParentId = async (parent_category_id) => {
   })
 }
 
+// 根据id获取分类
+const getCategoryById = async (categoryId) => {
+  let sql = 'SELECT pk_category_id,parent_category_id,name,description,gmt_create,gmt_modified FROM t_category WHERE is_delete = 0 AND pk_category_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, categoryId, (error, result) => {
+      if (error) {
+        console.log('根据id获取分类异常')
+        reject(error)
+      } else {
+        console.log('根据id获取分类正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addCategory,
   getAllCategories,
   updateCategory,
   deleteCategory,
   getCategoriesByParentId,
+  getCategoryById,
 }
