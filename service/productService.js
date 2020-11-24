@@ -2,8 +2,8 @@
 const productDao = require("../dao/productDao");
 
 // 添加商品
-const addProduct = async (parent_category_id, name, description) => {
-  let data = await productDao.addProduct(parent_category_id, name, description)
+const addProduct = async (name, price, categoryId, imgs, detail) => {
+  let data = await productDao.addProduct(name, price, categoryId, imgs, detail)
   return data
 }
 
@@ -14,8 +14,8 @@ const getAllProducts = async () => {
 }
 
 // 更新商品
-const updateProduct = async (categoryName, categoryDescription, categoryId) => {
-  let data = await productDao.updateProduct(categoryName, categoryDescription, categoryId)
+const updateProduct = async (fk_category_id, name, price, image, description, pk_product_id) => {
+  let data = await productDao.updateProduct(fk_category_id, name, price, image, description, pk_product_id)
   return data
 }
 

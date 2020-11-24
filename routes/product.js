@@ -6,9 +6,12 @@ const productService = require("../service/productService");
 
 // 添加商品
 router.post('/addProduct', async function (req, res) {
-  const {parent_category_id, name, description} = req.body
-  console.log(parent_category_id, name, description)
-  const data = await productService.addProduct(parent_category_id, name, description);
+  let {name, price, categoryId, imgs, detail} = req.body
+  console.log(name, price, categoryId, imgs, detail)
+  if (imgs.length === 0) {
+    imgs = ""
+  }
+  const data = await productService.addProduct(name, parseInt(price), categoryId, imgs, detail);
   res.send({status: 0, data: data});
 })
 
@@ -20,9 +23,9 @@ router.get('/getAllProducts', async function (req, res) {
 
 // 更新商品
 router.post('/updateProduct', async function (req, res) {
-  const {categoryName, categoryDescription, categoryId} = req.body
-  console.log(categoryName, categoryDescription, categoryId)
-  const data = await productService.updateProduct(categoryName, categoryDescription, categoryId);
+  const {fk_category_id, name, price, image, description, pk_product_id} = req.body
+  console.log(fk_category_id, name, price, image, description, pk_product_id)
+  const data = await productService.updateProduct(fk_category_id, name, price, image, description, pk_product_id);
   res.send({status: 0, data: data});
 })
 

@@ -3,11 +3,12 @@ let mysql = require('mysql');
 let db = require('../dao/db');
 
 // 添加商品
-const addProduct = async (parent_category_id, name, description) => {
-  let sql = 'INSERT INTO t_category(parent_category_id,name,description) VALUES (?,?,?)'
-  let sqlParams = [parent_category_id, name, description]
+const addProduct = async (name, price, categoryId, imgs, detail) => {
+  let sql = 'INSERT INTO t_product(fk_category_id,name,price,image,description) VALUES (?,?,?,?,?)'
+  let sqlParams = [categoryId, name, price, imgs, detail]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
+      console.log(sql, sqlParams)
       if (error) {
         console.error('添加商品异常')
         reject(error)
@@ -36,9 +37,9 @@ const getAllProducts = async () => {
 }
 
 // 更新商品
-const updateProduct = async (categoryName, categoryDescription, categoryId) => {
-  let sql = 'UPDATE t_category SET name = ?,description = ?,gmt_modified = NOW() WHERE is_delete = 0 AND pk_category_id = ?'
-  let sqlParams = [categoryName, categoryDescription, categoryId]
+const updateProduct = async (fk_category_id, name, price, image, description, pk_product_id) => {
+  let sql = 'UPDATE t_product SET fk_category_id = ?,name = ?,price = ?,image = ?,description = ?,gmt_modified = NOW() WHERE pk_product_id = ?'
+  let sqlParams = [fk_category_id, name, price, image, description, pk_product_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
