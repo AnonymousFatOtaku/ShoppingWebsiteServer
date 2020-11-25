@@ -37,11 +37,12 @@ const getAllProducts = async () => {
 }
 
 // 更新商品
-const updateProduct = async (fk_category_id, name, price, image, description, pk_product_id) => {
+const updateProduct = async (categoryId, name, price, imgs, detail, pk_product_id) => {
   let sql = 'UPDATE t_product SET fk_category_id = ?,name = ?,price = ?,image = ?,description = ?,gmt_modified = NOW() WHERE pk_product_id = ?'
-  let sqlParams = [fk_category_id, name, price, image, description, pk_product_id]
+  let sqlParams = [categoryId, name, price, imgs, detail, pk_product_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
+      console.log(sql, sqlParams)
       if (error) {
         console.error('更新商品异常')
         reject(error)

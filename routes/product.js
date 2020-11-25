@@ -23,9 +23,10 @@ router.get('/getAllProducts', async function (req, res) {
 
 // 更新商品
 router.post('/updateProduct', async function (req, res) {
-  const {fk_category_id, name, price, image, description, pk_product_id} = req.body
-  console.log(fk_category_id, name, price, image, description, pk_product_id)
-  const data = await productService.updateProduct(fk_category_id, name, price, image, description, pk_product_id);
+  let {categoryId, name, price, imgs, detail, pk_product_id} = req.body
+  imgs = imgs.toString()
+  console.log(categoryId, name, price, imgs, detail, pk_product_id)
+  const data = await productService.updateProduct(categoryId, name, price, imgs, detail, pk_product_id);
   res.send({status: 0, data: data});
 })
 

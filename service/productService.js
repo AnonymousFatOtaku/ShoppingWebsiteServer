@@ -14,8 +14,8 @@ const getAllProducts = async () => {
 }
 
 // 更新商品
-const updateProduct = async (fk_category_id, name, price, image, description, pk_product_id) => {
-  let data = await productDao.updateProduct(fk_category_id, name, price, image, description, pk_product_id)
+const updateProduct = async (categoryId, name, price, imgs, detail, pk_product_id) => {
+  let data = await productDao.updateProduct(categoryId, name, price, imgs, detail, pk_product_id)
   return data
 }
 

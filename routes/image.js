@@ -3,7 +3,7 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-const dirPath = path.join(__dirname, '..', 'public/upload')
+const dirPath = path.join(__dirname, '..', 'public/images')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) { // destination值为函数时需手动创建文件夹
@@ -30,7 +30,7 @@ const uploadSingle = upload.single('image')
 
 module.exports = function fileUpload(router) {
   // 上传图片
-  router.post('/manage/img/upload', (req, res) => {
+  router.post('/uploadImage', (req, res) => {
     uploadSingle(req, res, function (err) {
       if (err) {
         return res.send({
@@ -43,7 +43,7 @@ module.exports = function fileUpload(router) {
         status: 0,
         data: {
           name: file.filename,
-          url: 'http://localhost:5000/upload/' + file.filename
+          url: 'http://localhost:8000/upload/' + file.filename
         }
       })
 
@@ -51,7 +51,7 @@ module.exports = function fileUpload(router) {
   })
 
   // 删除图片
-  router.post('/manage/img/delete', (req, res) => {
+  router.post('/deleteImage', (req, res) => {
     const {name} = req.body
     fs.unlink(path.join(dirPath, name), (err) => {
       if (err) {

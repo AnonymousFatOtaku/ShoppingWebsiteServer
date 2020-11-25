@@ -14,6 +14,7 @@ let role = require('./routes/role');
 let right = require('./routes/right');
 let category = require('./routes/category');
 let product = require('./routes/product');
+let upload = require('./routes/upload');
 // 引入jwt token工具
 let JwtUtil = require('./public/utils/jwtUtils');
 
@@ -60,6 +61,7 @@ app.use('/role', role);
 app.use('/right', right);
 app.use('/category', category);
 app.use('/product', product);
+app.use('/upload', upload);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
