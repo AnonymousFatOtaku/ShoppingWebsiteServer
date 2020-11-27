@@ -33,4 +33,37 @@ router.post('/deletePromotion', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 获取活动商品列表
+router.get('/getPromotionProducts', async function (req, res) {
+  const {fk_promotion_id} = req.query
+  const data = await promotionService.getPromotionProducts(fk_promotion_id);
+  res.send({status: 0, data: data});
+})
+
+/*
+* 设置活动商品
+* 1.获取新设置的参加当前活动的商品的列表
+* 2.获取已有的当前活动商品列表
+* 3.删除旧列表数据，添加新列表数据
+* */
+router.post('/setPromotionProducts', async function (req, res) {
+  let {products, pk_promotion_id} = req.body
+  console.log(products, pk_promotion_id)
+
+  // 创建数组保存新的活动商品列表
+  let newProducts = []
+  products.toString().split(",").forEach(function (item) {
+    newProducts.push(parseInt(item));
+  })
+
+  // 删除旧列表数据
+  const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
+
+  // 添加新列表数据
+  newProducts.forEach(async function (product) {
+    await promotionService.addPromotionProduct(product, pk_promotion_id)
+  })
+  res.send({status: 0});
+})
+
 module.exports = router;

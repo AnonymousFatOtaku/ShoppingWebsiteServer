@@ -25,9 +25,30 @@ const deletePromotion = async (pk_promotion_id) => {
   return data
 }
 
+// 获取活动商品列表
+const getPromotionProducts = async (fk_promotion_id) => {
+  let data = await promotionDao.getPromotionProducts(fk_promotion_id)
+  return data
+}
+
+// 添加活动商品
+const addPromotionProduct = async (fk_product_id, fk_promotion_id) => {
+  let data = await promotionDao.addPromotionProduct(fk_product_id, fk_promotion_id)
+  return data
+}
+
+// 删除活动商品
+const deletePromotionProducts = async (fk_promotion_id) => {
+  let data = await promotionDao.deletePromotionProducts(fk_promotion_id)
+  return data
+}
+
 module.exports = {
   addPromotion,
   getAllPromotions,
   updatePromotion,
   deletePromotion,
+  getPromotionProducts,
+  addPromotionProduct,
+  deletePromotionProducts,
 }
