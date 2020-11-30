@@ -1,0 +1,36 @@
+// 控制层/路由处理层代码，解析request请求的参数，做一些合法性的校验，如果参数不合法，直接向表示层响应异常状态码。如果参数合法，异步调用Service业务层
+let express = require('express');
+let router = express.Router();
+const validator = require('validator');
+const orderService = require("../service/orderService");
+
+// 添加订单
+router.post('/addOrder', async function (req, res) {
+  const {parent_category_id, name, description} = req.body
+  console.log(parent_category_id, name, description)
+  const data = await orderService.addOrder(parent_category_id, name, description);
+  res.send({status: 0, data: data});
+})
+
+// 获取所有订单列表
+router.get('/getAllOrders', async function (req, res) {
+  const data = await orderService.getAllOrders();
+  res.send({status: 0, data: data});
+})
+
+// 更新订单
+router.post('/updateOrder', async function (req, res) {
+  const {categoryName, categoryDescription, categoryId} = req.body
+  console.log(categoryName, categoryDescription, categoryId)
+  const data = await orderService.updateOrder(categoryName, categoryDescription, categoryId);
+  res.send({status: 0, data: data});
+})
+
+// 删除订单
+router.post('/deleteOrder', async function (req, res) {
+  const {pk_category_id} = req.body
+  const data = await orderService.deleteOrder(pk_category_id);
+  res.send({status: 0, data: data});
+})
+
+module.exports = router;
