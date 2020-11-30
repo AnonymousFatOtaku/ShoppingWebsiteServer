@@ -87,6 +87,7 @@ const getPromotionProducts = async (fk_promotion_id) => {
 const addPromotionProduct = async (fk_product_id, fk_promotion_id) => {
   let sql = 'INSERT INTO t_product_promotion_relation(fk_product_id,fk_promotion_id) VALUES (?,?)'
   let sqlParams = [fk_product_id, fk_promotion_id]
+  // console.log(sqlParams)
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {

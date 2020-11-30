@@ -48,19 +48,21 @@ router.get('/getPromotionProducts', async function (req, res) {
 * */
 router.post('/setPromotionProducts', async function (req, res) {
   let {products, pk_promotion_id} = req.body
-  console.log(products, pk_promotion_id)
+  // console.log(products.products, pk_promotion_id)
 
   // 创建数组保存新的活动商品列表
   let newProducts = []
-  products.toString().split(",").forEach(function (item) {
+  products.products.toString().split(",").forEach(function (item) {
     newProducts.push(parseInt(item));
   })
+  // console.log(newProducts)
 
   // 删除旧列表数据
   const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
 
   // 添加新列表数据
   newProducts.forEach(async function (product) {
+    // console.log(product)
     await promotionService.addPromotionProduct(product, pk_promotion_id)
   })
   res.send({status: 0});
