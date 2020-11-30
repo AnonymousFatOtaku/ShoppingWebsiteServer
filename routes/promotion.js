@@ -68,4 +68,10 @@ router.post('/setPromotionProducts', async function (req, res) {
   res.send({status: 0});
 })
 
+// 获取所有参加活动的商品列表
+router.get('/getAllPromotionProducts', async function (req, res) {
+  const data = await promotionService.getAllPromotionProducts();
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

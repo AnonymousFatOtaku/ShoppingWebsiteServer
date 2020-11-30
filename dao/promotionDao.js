@@ -117,6 +117,22 @@ const deletePromotionProducts = async (fk_promotion_id) => {
   })
 }
 
+// 获取所有参加活动的商品列表
+const getAllPromotionProducts = async () => {
+  let sql = 'SELECT pk_product_promotion_id,fk_product_id,fk_promotion_id,gmt_create,gmt_modified FROM t_product_promotion_relation WHERE is_delete = 0'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, (error, result) => {
+      if (error) {
+        console.log('获取所有参加活动的商品列表异常')
+        reject(error)
+      } else {
+        console.log('获取所有参加活动的商品列表正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addPromotion,
   getAllPromotions,
@@ -125,4 +141,5 @@ module.exports = {
   getPromotionProducts,
   addPromotionProduct,
   deletePromotionProducts,
+  getAllPromotionProducts,
 }

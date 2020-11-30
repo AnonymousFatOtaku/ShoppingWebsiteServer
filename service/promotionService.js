@@ -43,6 +43,12 @@ const deletePromotionProducts = async (fk_promotion_id) => {
   return data
 }
 
+// 获取所有参加活动的商品列表
+const getAllPromotionProducts = async () => {
+  let data = await promotionDao.getAllPromotionProducts()
+  return data
+}
+
 module.exports = {
   addPromotion,
   getAllPromotions,
@@ -51,4 +57,5 @@ module.exports = {
   getPromotionProducts,
   addPromotionProduct,
   deletePromotionProducts,
+  getAllPromotionProducts,
 }
