@@ -67,9 +67,43 @@ const deleteOrder = async (pk_category_id) => {
   })
 }
 
+// 根据订单id获取订单列表
+const getOrderById = async (pk_order_id) => {
+  let sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND pk_order_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, pk_order_id, (error, result) => {
+      if (error) {
+        console.log('根据订单id获取订单列表异常')
+        reject(error)
+      } else {
+        console.log('根据订单id获取订单列表正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
+// 根据用户id获取订单列表
+const getOrdersByUserId = async (fk_user_id) => {
+  let sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND fk_user_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, fk_user_id, (error, result) => {
+      if (error) {
+        console.log('根据用户id获取订单列表异常')
+        reject(error)
+      } else {
+        console.log('根据用户id获取订单列表正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
   updateOrder,
   deleteOrder,
+  getOrderById,
+  getOrdersByUserId,
 }

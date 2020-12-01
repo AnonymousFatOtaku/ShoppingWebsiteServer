@@ -33,4 +33,17 @@ router.post('/deleteOrder', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 获取所有订单列表
+router.get('/searchOrders', async function (req, res) {
+  const {searchName, searchType} = req.query
+  console.log(searchName, searchType)
+  let data
+  if (searchType === 'productId') {
+    data = await orderService.getOrderById(searchName);
+  } else if (searchType === 'userId') {
+    data = await orderService.getOrdersByUserId(searchName);
+  }
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

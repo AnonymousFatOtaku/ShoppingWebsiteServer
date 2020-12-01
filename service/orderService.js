@@ -25,9 +25,23 @@ const deleteOrder = async (pk_category_id) => {
   return data
 }
 
+// 根据订单id获取订单列表
+const getOrderById = async (pk_order_id) => {
+  let data = await orderDao.getOrderById(pk_order_id)
+  return data
+}
+
+// 根据用户id获取订单列表
+const getOrdersByUserId = async (fk_user_id) => {
+  let data = await orderDao.getOrdersByUserId(fk_user_id)
+  return data
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
   updateOrder,
   deleteOrder,
+  getOrderById,
+  getOrdersByUserId,
 }
