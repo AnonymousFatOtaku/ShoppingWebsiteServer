@@ -20,9 +20,9 @@ router.get('/getAllOrders', async function (req, res) {
 
 // 更新订单
 router.post('/updateOrder', async function (req, res) {
-  const {categoryName, categoryDescription, categoryId} = req.body
-  console.log(categoryName, categoryDescription, categoryId)
-  const data = await orderService.updateOrder(categoryName, categoryDescription, categoryId);
+  const {name, phone, address, payment, pk_order_id} = req.body
+  console.log(name, phone, address, payment, pk_order_id)
+  const data = await orderService.updateOrder(name, phone, address, payment, pk_order_id);
   res.send({status: 0, data: data});
 })
 

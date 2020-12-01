@@ -14,8 +14,8 @@ const getAllOrders = async () => {
 }
 
 // 更新订单
-const updateOrder = async (categoryName, categoryDescription, categoryId) => {
-  let data = await orderDao.updateOrder(categoryName, categoryDescription, categoryId)
+const updateOrder = async (name, phone, address, payment, pk_order_id) => {
+  let data = await orderDao.updateOrder(name, phone, address, payment, pk_order_id)
   return data
 }
 

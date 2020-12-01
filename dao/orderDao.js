@@ -35,9 +35,9 @@ const getAllOrders = async () => {
 }
 
 // 更新订单
-const updateOrder = async (categoryName, categoryDescription, categoryId) => {
-  let sql = 'UPDATE t_category SET name = ?,description = ?,gmt_modified = NOW() WHERE is_delete = 0 AND pk_category_id = ?'
-  let sqlParams = [categoryName, categoryDescription, categoryId]
+const updateOrder = async (name, phone, address, payment, pk_order_id) => {
+  let sql = 'UPDATE t_order SET name = ?,phone = ?,address = ?,payment = ?,gmt_modified = NOW() WHERE is_delete = 0 AND pk_order_id = ?'
+  let sqlParams = [name, phone, address, payment, pk_order_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
