@@ -52,10 +52,10 @@ const updateOrder = async (categoryName, categoryDescription, categoryId) => {
 }
 
 // 删除订单
-const deleteOrder = async (pk_category_id) => {
-  let sql = 'UPDATE t_category SET is_delete = 0,gmt_modified = NOW() WHERE pk_category_id = ?'
+const deleteOrder = async (pk_order_id) => {
+  let sql = 'UPDATE t_order SET is_delete = 1,gmt_modified = NOW() WHERE is_delete = 0 AND pk_order_id = ?'
   return new Promise((resolve, reject) => {
-    db.connection.query(sql, pk_category_id, (error, result) => {
+    db.connection.query(sql, pk_order_id, (error, result) => {
       if (error) {
         console.error('删除订单异常')
         reject(error)

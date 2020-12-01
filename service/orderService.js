@@ -20,8 +20,8 @@ const updateOrder = async (categoryName, categoryDescription, categoryId) => {
 }
 
 // 删除订单
-const deleteOrder = async (pk_category_id) => {
-  let data = await orderDao.deleteOrder(pk_category_id)
+const deleteOrder = async (pk_order_id) => {
+  let data = await orderDao.deleteOrder(pk_order_id)
   return data
 }
 

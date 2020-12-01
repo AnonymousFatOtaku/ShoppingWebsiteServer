@@ -28,8 +28,8 @@ router.post('/updateOrder', async function (req, res) {
 
 // 删除订单
 router.post('/deleteOrder', async function (req, res) {
-  const {pk_category_id} = req.body
-  const data = await orderService.deleteOrder(pk_category_id);
+  const {pk_order_id} = req.body
+  const data = await orderService.deleteOrder(pk_order_id);
   res.send({status: 0, data: data});
 })
 
