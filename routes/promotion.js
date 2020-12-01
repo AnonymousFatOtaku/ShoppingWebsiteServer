@@ -30,6 +30,7 @@ router.post('/updatePromotion', async function (req, res) {
 router.post('/deletePromotion', async function (req, res) {
   const {pk_promotion_id} = req.body
   const data = await promotionService.deletePromotion(pk_promotion_id);
+  const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
   res.send({status: 0, data: data});
 })
 
