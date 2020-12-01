@@ -46,4 +46,12 @@ router.get('/searchOrders', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
+// 根据订单id获取订单详情
+router.get('/getOrderInfoByOrderId', async function (req, res) {
+  const {fk_order_id} = req.query
+  console.log(fk_order_id)
+  const data = await orderService.getOrderInfoByOrderId(fk_order_id);
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

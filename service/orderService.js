@@ -37,6 +37,12 @@ const getOrdersByUserId = async (fk_user_id) => {
   return data
 }
 
+// 根据订单id获取订单详情
+const getOrderInfoByOrderId = async (fk_order_id) => {
+  let data = await orderDao.getOrderInfoByOrderId(fk_order_id)
+  return data
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
@@ -44,4 +50,5 @@ module.exports = {
   deleteOrder,
   getOrderById,
   getOrdersByUserId,
+  getOrderInfoByOrderId,
 }

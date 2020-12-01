@@ -99,6 +99,22 @@ const getOrdersByUserId = async (fk_user_id) => {
   })
 }
 
+// 根据订单id获取订单详情
+const getOrderInfoByOrderId = async (fk_order_id) => {
+  let sql = 'SELECT pk_order_detail_id,fk_order_id,fk_product_id,name,price,quantity,total_price,gmt_create,gmt_modified FROM t_order_detail WHERE is_delete = 0 AND fk_order_id = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, fk_order_id, (error, result) => {
+      if (error) {
+        console.log('根据订单id获取订单详情异常')
+        reject(error)
+      } else {
+        console.log('根据订单id获取订单详情正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
@@ -106,4 +122,5 @@ module.exports = {
   deleteOrder,
   getOrderById,
   getOrdersByUserId,
+  getOrderInfoByOrderId,
 }
