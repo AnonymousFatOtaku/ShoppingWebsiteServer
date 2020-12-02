@@ -33,7 +33,7 @@ router.post('/deleteOrder', async function (req, res) {
   res.send({status: 0, data: data});
 })
 
-// 获取所有订单列表
+// 根据条件搜索订单
 router.get('/searchOrders', async function (req, res) {
   const {searchName, searchType} = req.query
   console.log(searchName, searchType)

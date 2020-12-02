@@ -17,4 +17,12 @@ router.get('/getAllLogs', async function (req, res) {
   res.send({status: 0, data: data});
 });
 
+// 根据条件搜索日志
+router.get('/searchLogs', async function (req, res) {
+  const {searchName, searchType, startTime, endTime} = req.query
+  console.log(searchName, searchType, startTime, endTime)
+  let data = await logService.searchLogs(searchName, searchType, startTime, endTime);
+  res.send({status: 0, data: data});
+})
+
 module.exports = router;

@@ -13,4 +13,10 @@ const getAllLogs = async () => {
   return data
 }
 
-module.exports = {addLog, getAllLogs}
+// 根据条件搜索日志
+const searchLogs = async (searchName, searchType, startTime, endTime) => {
+  let data = await logDao.searchLogs(searchName, searchType, startTime, endTime)
+  return data
+}
+
+module.exports = {addLog, getAllLogs, searchLogs}
