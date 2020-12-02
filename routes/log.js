@@ -3,19 +3,18 @@ var express = require('express');
 var router = express.Router();
 const validator = require('validator');
 const logService = require("../service/logService");
-const userService = require("../service/userService");
 
 // 添加日志
 router.post('/addLog', async function (req, res) {
-  const {operateType, username} = req.body
-  const data = await logService.addLog();
+  const {operateType, operate_content, pk_user_id} = req.body
+  const data = await logService.addLog(operateType, operate_content, pk_user_id);
   res.send(data);
 })
 
 // 获取所有日志列表
 router.get('/getAllLogs', async function (req, res) {
   const data = await logService.getAllLogs();
-  res.send(data);
+  res.send({status: 0, data: data});
 });
 
 module.exports = router;

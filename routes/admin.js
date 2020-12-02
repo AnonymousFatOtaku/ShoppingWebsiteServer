@@ -59,7 +59,7 @@ router.post('/adminLogin', async function (req, res) {
       // 更新用户登录时间、上次登录时间、登录次数
       await adminService.updateAdminLoginInfo(adminLastLoginInfo[0].login_time, adminLastLoginInfo[0].login_count, user[0].username)
       // 添加登录日志
-      await logService.addLog(4, user[0].pk_user_id)
+      await logService.addLog(4, user[0].username + '成功登录', user[0].pk_user_id)
       // 生成token
       let jwtUtil = new JwtUtil(user[0].pk_user_id, user[0].username)
       let token = jwtUtil.generateToken()
