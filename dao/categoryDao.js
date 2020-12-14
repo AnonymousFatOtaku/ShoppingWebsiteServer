@@ -99,6 +99,22 @@ const getCategoryById = async (categoryId) => {
   })
 }
 
+// 根据名称获取分类
+const getCategoryByName = async (categoryName) => {
+  let sql = 'SELECT pk_category_id,parent_category_id,name,description,gmt_create,gmt_modified FROM t_category WHERE is_delete = 0 AND name = ?'
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, categoryName, (error, result) => {
+      if (error) {
+        console.log('根据名称获取分类异常')
+        reject(error)
+      } else {
+        console.log('根据名称获取分类正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addCategory,
   getAllCategories,
@@ -106,4 +122,5 @@ module.exports = {
   deleteCategory,
   getCategoriesByParentId,
   getCategoryById,
+  getCategoryByName,
 }

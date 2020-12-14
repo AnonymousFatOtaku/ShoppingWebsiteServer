@@ -3,6 +3,7 @@ let express = require('express');
 let router = express.Router();
 const validator = require('validator');
 const productService = require("../service/productService");
+const categoryService = require("../service/categoryService");
 
 // 添加商品
 router.post('/addProduct', async function (req, res) {
@@ -64,9 +65,13 @@ router.post('/updateStatus', async function (req, res) {
 
 // 根据关键字搜索商品
 router.get('/searchProducts', async function (req, res) {
-  const {searchName, searchType} = req.query
+  let {searchName, searchType} = req.query
   console.log(searchName, searchType)
-  let data = await productService.searchProducts(searchName, searchType);
+  if (searchType === 'categoryName') {
+    let category = await categoryService.getCategoryByName(searchName);
+    searchName = category.length > 0 ? category[0].pk_category_id : null
+  }
+  let data = searchName !== null ? await productService.searchProducts(searchName, searchType) : [];
   res.send({status: 0, data: data});
 })
 

@@ -92,7 +92,7 @@ const searchProducts = async (searchName, searchType) => {
   let sql
   if (searchType === 'productName') {
     sql = "SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND name LIKE " + mysql.escape("%" + searchName + "%")
-  } else if (searchType === 'categoryId') {
+  } else if (searchType === 'categoryName') {
     sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND fk_category_id = ?'
   }
   return new Promise((resolve, reject) => {

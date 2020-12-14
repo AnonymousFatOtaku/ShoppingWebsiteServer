@@ -37,6 +37,12 @@ const getCategoryById = async (categoryId) => {
   return data
 }
 
+// 根据名称获取分类
+const getCategoryByName = async (categoryName) => {
+  let data = await categoryDao.getCategoryByName(categoryName)
+  return data
+}
+
 module.exports = {
   addCategory,
   getAllCategories,
@@ -44,4 +50,5 @@ module.exports = {
   deleteCategory,
   getCategoriesByParentId,
   getCategoryById,
+  getCategoryByName,
 }
