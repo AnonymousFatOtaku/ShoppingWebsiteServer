@@ -53,7 +53,7 @@ const updateCategory = async (categoryName, categoryDescription, categoryId) => 
 
 // 删除品类
 const deleteCategory = async (pk_category_id) => {
-  let sql = 'UPDATE t_category SET is_delete = 0,gmt_modified = NOW() WHERE pk_category_id = ?'
+  let sql = 'UPDATE t_category SET is_delete = 1,gmt_modified = NOW() WHERE pk_category_id = ?'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, pk_category_id, (error, result) => {
       if (error) {

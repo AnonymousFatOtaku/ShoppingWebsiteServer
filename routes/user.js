@@ -53,20 +53,18 @@ router.get('/getAllUsers', async function (req, res) {
 
 // 更新用户
 router.post('/updateUser', async function (req, res) {
-  const {pk_user_id, username, password, phone, email} = req.body
-  console.log(pk_user_id, username, password, phone, email)
+  const {pk_user_id, username, phone, email} = req.body
+  console.log(pk_user_id, username, phone, email)
 
   // 验证获取到的数据是否符合规范
   if (!validator.matches(username, /^[a-zA-Z0-9_]{3,12}$/)) { // 通过matches进行正则验证
     res.send({status: 1, msg: '用户名格式不正确，请检查后重新输入'})
-  } else if (!validator.matches(password, /^[a-zA-Z0-9_]{3,12}$/)) {
-    res.send({status: 1, msg: '密码格式不正确，请检查后重新输入'})
   } else if (!validator.matches(phone, /^1[3456789]\d{9}$/)) {
     res.send({status: 1, msg: '手机号格式不正确，请检查后重新输入'})
   } else if (!validator.isEmail(email)) { // 通过isEmail进行邮箱验证
     res.send({status: 1, msg: '邮箱格式不正确，请检查后重新输入'})
   } else { // 所有数据验证通过才进行数据库操作
-    const data = await userService.updateUser(pk_user_id, username, password, phone, email);
+    const data = await userService.updateUser(pk_user_id, username, phone, email);
     res.send({status: 0, data: data});
   }
 })
@@ -75,8 +73,12 @@ router.post('/updateUser', async function (req, res) {
 router.post('/deleteUser', async function (req, res) {
   const {pk_user_id} = req.body
   console.log(pk_user_id)
-  const data = await userService.deleteUser(pk_user_id);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(pk_user_id.toString())) {
+    res.send({status: 1, msg: '用户id不正确，请检查后重新输入'})
+  } else {
+    const data = await userService.deleteUser(pk_user_id);
+    res.send({status: 0, data: data});
+  }
 })
 
 /*
@@ -126,8 +128,29 @@ router.post('/updateUserRole', async function (req, res) {
     type = 1
   }
 
-  const data = await userService.updateUserType(pk_user_id, type);
-  const result = await userService.updateUserRole(pk_user_id, role_id);
+  if (!validator.isInt(pk_user_id.toString())) {
+    res.send({status: 1, msg: '用户id不正确，请检查后重新输入'})
+  } else if (!validator.isInt(role_id.toString())) {
+    res.send({status: 1, msg: '角色id不正确，请检查后重新输入'})
+  } else {
+    const data = await userService.updateUserType(pk_user_id, type);
+    const result = await userService.updateUserRole(pk_user_id, role_id);
+    res.send({status: 0, data: result});
+  }
+})
+
+// 根据用户名、电话、邮箱获取用户信息
+router.get('/getUserByUsernameAndPhoneAndEmail', async function (req, res) {
+  const {username, phone, email} = req.query
+  const data = await userService.getUserByUsernameAndPhoneAndEmail(username, phone, email);
+  res.send({status: 0, data: data});
+});
+
+// 更新用户密码
+router.post('/updateUserPassword', async function (req, res) {
+  let {password, pk_user_id} = req.body
+  console.log(password, pk_user_id)
+  const result = await userService.updateUserPassword(password, pk_user_id);
   res.send({status: 0, data: result});
 })
 

@@ -37,7 +37,7 @@ const getUserByUsernameAndPhoneAndEmail = async (username, phone, email) => {
 
 // 获取所有用户列表
 const getAllUsers = async () => {
-  let sql = 'SELECT pk_user_id,username,phone,email,login_time,last_login_time,login_count,type,gmt_create,gmt_modified FROM t_user WHERE is_delete = 0'
+  let sql = 'SELECT pk_user_id,username,password,phone,email,login_time,last_login_time,login_count,type,gmt_create,gmt_modified FROM t_user WHERE is_delete = 0'
   return new Promise((resolve, reject) => {
     db.connection.query(sql, (error, result) => {
       if (error) {
@@ -52,9 +52,9 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (pk_user_id, username, password, phone, email) => {
-  let sql = 'UPDATE t_user SET username = ?, password = MD5(?), phone = ?, email = ?, gmt_modified = NOW() WHERE pk_user_id = ?'
-  let sqlParams = [username, password, phone, email, pk_user_id]
+const updateUser = async (pk_user_id, username, phone, email) => {
+  let sql = 'UPDATE t_user SET username = ?, phone = ?, email = ?, gmt_modified = NOW() WHERE pk_user_id = ?'
+  let sqlParams = [username, phone, email, pk_user_id]
   return new Promise((resolve, reject) => {
     db.connection.query(sql, sqlParams, (error, result) => {
       if (error) {
@@ -188,6 +188,23 @@ const updateUserRole = async (pk_user_id, role_id) => {
   })
 }
 
+// 更新用户密码
+const updateUserPassword = async (password, pk_user_id) => {
+  let sql = 'UPDATE t_user SET password = MD5(?), gmt_modified = NOW() WHERE pk_user_id = ?'
+  let sqlParams = [password, pk_user_id]
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, sqlParams, (error, result) => {
+      if (error) {
+        console.error('更新用户密码异常')
+        reject(error)
+      } else {
+        console.error('更新用户密码正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -200,4 +217,5 @@ module.exports = {
   addUserRole,
   updateUserType,
   updateUserRole,
+  updateUserPassword,
 }

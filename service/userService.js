@@ -20,8 +20,8 @@ const getAllUsers = async () => {
 }
 
 // 更新用户
-const updateUser = async (pk_user_id, username, password, phone, email) => {
-  let data = await userDao.updateUser(pk_user_id, username, password, phone, email)
+const updateUser = async (pk_user_id, username, phone, email) => {
+  let data = await userDao.updateUser(pk_user_id, username, phone, email)
   return data
 }
 
@@ -67,6 +67,12 @@ const updateUserRole = async (pk_user_id, role_id) => {
   return data
 }
 
+// 更新用户密码
+const updateUserPassword = async (password, pk_user_id) => {
+  let data = await userDao.updateUserPassword(password, pk_user_id)
+  return data
+}
+
 module.exports = {
   getAllUsers,
   addUser,
@@ -79,4 +85,5 @@ module.exports = {
   addUserRole,
   updateUserType,
   updateUserRole,
+  updateUserPassword,
 }

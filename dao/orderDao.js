@@ -67,38 +67,6 @@ const deleteOrder = async (pk_order_id) => {
   })
 }
 
-// 根据订单id获取订单列表
-const getOrderById = async (pk_order_id) => {
-  let sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND pk_order_id = ?'
-  return new Promise((resolve, reject) => {
-    db.connection.query(sql, pk_order_id, (error, result) => {
-      if (error) {
-        console.log('根据订单id获取订单列表异常')
-        reject(error)
-      } else {
-        console.log('根据订单id获取订单列表正常')
-        resolve(result)
-      }
-    })
-  })
-}
-
-// 根据用户id获取订单列表
-const getOrdersByUserId = async (fk_user_id) => {
-  let sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND fk_user_id = ?'
-  return new Promise((resolve, reject) => {
-    db.connection.query(sql, fk_user_id, (error, result) => {
-      if (error) {
-        console.log('根据用户id获取订单列表异常')
-        reject(error)
-      } else {
-        console.log('根据用户id获取订单列表正常')
-        resolve(result)
-      }
-    })
-  })
-}
-
 // 根据订单id获取订单详情
 const getOrderInfoByOrderId = async (fk_order_id) => {
   let sql = 'SELECT pk_order_detail_id,fk_order_id,fk_product_id,name,price,quantity,total_price,gmt_create,gmt_modified FROM t_order_detail WHERE is_delete = 0 AND fk_order_id = ?'
@@ -115,12 +83,32 @@ const getOrderInfoByOrderId = async (fk_order_id) => {
   })
 }
 
+// 根据条件搜索订单
+const searchOrders = async (searchName, searchType) => {
+  let sql
+  if (searchType === 'orderId') {
+    sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND pk_order_id = ?'
+  } else if (searchType === 'userId') {
+    sql = 'SELECT pk_order_id,fk_user_id,name,phone,address,payment,status,order_time,gmt_create,gmt_modified FROM t_order WHERE is_delete = 0 AND fk_user_id = ?'
+  }
+  return new Promise((resolve, reject) => {
+    db.connection.query(sql, searchName, (error, result) => {
+      if (error) {
+        console.log('根据条件搜索订单异常')
+        reject(error)
+      } else {
+        console.log('根据条件搜索订单正常')
+        resolve(result)
+      }
+    })
+  })
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
   updateOrder,
   deleteOrder,
-  getOrderById,
-  getOrdersByUserId,
   getOrderInfoByOrderId,
+  searchOrders,
 }

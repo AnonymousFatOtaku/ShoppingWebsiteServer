@@ -25,21 +25,15 @@ const deleteOrder = async (pk_order_id) => {
   return data
 }
 
-// 根据订单id获取订单列表
-const getOrderById = async (pk_order_id) => {
-  let data = await orderDao.getOrderById(pk_order_id)
-  return data
-}
-
-// 根据用户id获取订单列表
-const getOrdersByUserId = async (fk_user_id) => {
-  let data = await orderDao.getOrdersByUserId(fk_user_id)
-  return data
-}
-
 // 根据订单id获取订单详情
 const getOrderInfoByOrderId = async (fk_order_id) => {
   let data = await orderDao.getOrderInfoByOrderId(fk_order_id)
+  return data
+}
+
+// 根据条件搜索订单
+const searchOrders = async (searchName, searchType) => {
+  let data = await orderDao.searchOrders(searchName, searchType)
   return data
 }
 
@@ -48,7 +42,6 @@ module.exports = {
   getAllOrders,
   updateOrder,
   deleteOrder,
-  getOrderById,
-  getOrdersByUserId,
   getOrderInfoByOrderId,
+  searchOrders,
 }

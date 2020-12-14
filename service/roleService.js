@@ -43,6 +43,12 @@ const getUserRoles = async () => {
   return data
 }
 
+// 根据角色id获取所属用户
+const getUsersByRoleId = async (fk_role_id) => {
+  let data = await roleDao.getUsersByRoleId(fk_role_id)
+  return data
+}
+
 module.exports = {
   addRole,
   getAllRoles,
@@ -51,4 +57,5 @@ module.exports = {
   getRoleByUserId,
   updateRoleByUserId,
   getUserRoles,
+  getUsersByRoleId,
 }

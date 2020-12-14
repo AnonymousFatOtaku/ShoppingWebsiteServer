@@ -7,7 +7,7 @@ const logService = require("../service/logService");
 // 引入jwt token工具
 let JwtUtil = require('../public/utils/jwtUtils');
 
-// 添加用户
+// 添加用户(未使用)
 router.post('/addAdmin', async function (req, res) {
   // 读取请求参数数据
   const {username, password} = req.body
@@ -21,14 +21,14 @@ router.get('/getAllAdmins', async function (req, res) {
   res.send(data);
 });
 
-// 更新用户
+// 更新用户(未使用)
 router.post('/updateAdmin', async function (req, res) {
   const {username, password} = req.body
   const data = await adminService.updateAdmin(username, password);
   res.send(data);
 })
 
-// 删除用户
+// 删除用户(未使用)
 router.post('/deleteAdmin', async function (req, res) {
   const {username} = req.body
   const data = await adminService.deleteAdmin(username);

@@ -20,8 +20,8 @@ const updateProduct = async (categoryId, name, price, imgs, detail, pk_product_i
 }
 
 // 删除商品
-const deleteProduct = async (pk_category_id) => {
-  let data = await productDao.deleteProduct(pk_category_id)
+const deleteProduct = async (pk_product_id) => {
+  let data = await productDao.deleteProduct(pk_product_id)
   return data
 }
 
@@ -31,15 +31,9 @@ const updateStatus = async (productId, status) => {
   return data
 }
 
-// 根据商品名搜索商品
-const searchProductsByProductName = async (searchName) => {
-  let data = await productDao.searchProductsByProductName(searchName)
-  return data
-}
-
-// 根据分类id搜索商品
-const searchProductsByCategoryId = async (searchName) => {
-  let data = await productDao.searchProductsByCategoryId(searchName)
+// 根据条件搜索商品
+const searchProducts = async (searchName, searchType) => {
+  let data = await productDao.searchProducts(searchName, searchType)
   return data
 }
 
@@ -49,6 +43,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   updateStatus,
-  searchProductsByProductName,
-  searchProductsByCategoryId,
+  searchProducts,
 }

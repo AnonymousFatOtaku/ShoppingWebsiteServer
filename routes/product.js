@@ -7,12 +7,17 @@ const productService = require("../service/productService");
 // 添加商品
 router.post('/addProduct', async function (req, res) {
   let {name, price, categoryId, imgs, detail} = req.body
+  imgs = imgs.toString()
   console.log(name, price, categoryId, imgs, detail)
   if (imgs.length === 0) {
     imgs = ""
   }
-  const data = await productService.addProduct(name, parseInt(price), categoryId, imgs, detail);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(categoryId.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '分类id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await productService.addProduct(name, parseInt(price), categoryId, imgs, detail);
+    res.send({status: 0, data: data});
+  }
 })
 
 // 获取所有商品列表
@@ -26,14 +31,20 @@ router.post('/updateProduct', async function (req, res) {
   let {categoryId, name, price, imgs, detail, pk_product_id} = req.body
   imgs = imgs.toString()
   console.log(categoryId, name, price, imgs, detail, pk_product_id)
-  const data = await productService.updateProduct(categoryId, name, price, imgs, detail, pk_product_id);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(categoryId.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '分类id不正确，请检查后重新输入'})
+  } else if (!validator.isInt(pk_product_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '商品id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await productService.updateProduct(categoryId, name, price, imgs, detail, pk_product_id);
+    res.send({status: 0, data: data});
+  }
 })
 
-// 删除商品
+// 删除商品(未使用)
 router.post('/deleteProduct', async function (req, res) {
-  const {pk_category_id} = req.body
-  const data = await productService.deleteProduct(pk_category_id);
+  const {pk_product_id} = req.body
+  const data = await productService.deleteProduct(pk_product_id);
   res.send({status: 0, data: data});
 })
 
@@ -41,20 +52,21 @@ router.post('/deleteProduct', async function (req, res) {
 router.post('/updateStatus', async function (req, res) {
   let {productId, status} = req.body
   console.log(productId, status)
-  const data = await productService.updateStatus(productId, status);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(productId.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '商品id不正确，请检查后重新输入'})
+  } else if (!validator.isInt(status.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '商品状态不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await productService.updateStatus(productId, status);
+    res.send({status: 0, data: data});
+  }
 })
 
 // 根据关键字搜索商品
 router.get('/searchProducts', async function (req, res) {
   const {searchName, searchType} = req.query
   console.log(searchName, searchType)
-  let data
-  if (searchType === 'productName') {
-    data = await productService.searchProductsByProductName(searchName);
-  } else if (searchType === 'categoryId') {
-    data = await productService.searchProductsByCategoryId(searchName);
-  }
+  let data = await productService.searchProducts(searchName, searchType);
   res.send({status: 0, data: data});
 })
 

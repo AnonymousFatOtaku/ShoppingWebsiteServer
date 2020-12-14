@@ -9,7 +9,7 @@ const rightService = require("../service/rightService");
 router.post('/addRole', async function (req, res) {
   const {parent_role_id, name, description} = req.body
   console.log(parent_role_id, name, description)
-  if (!validator.isInt(parent_role_id)) {
+  if (!validator.isInt(parent_role_id.toString())) {
     res.send({status: 1, msg: '父级角色ID不符合规范'})
   } else if (name === null || name === undefined || name.indexOf(' ') === 0 || name === "" || name.length > 15) {
     res.send({status: 1, msg: '角色名不符合规范'})
@@ -27,24 +27,24 @@ router.get('/getAllRoles', async function (req, res) {
   res.send({status: 0, data: data});
 });
 
-// 更新角色
+// 更新角色(未使用)
 router.post('/updateRole', async function (req, res) {
   const {name, description, pk_role_id} = req.body
   const data = await roleService.updateRole(name, description, pk_role_id);
   res.send(data);
 })
 
-// 删除角色
+// 删除角色(未使用)
 router.post('/deleteRole', async function (req, res) {
   const {pk_role_id} = req.body
   const data = await roleService.deleteRole(pk_role_id);
-  res.send(data);
+  res.send({status: 0, data: data});
 })
 
 // 根据用户id获取用户角色
 router.get('/getRoleByUserId', async function (req, res) {
   const {pk_user_id} = req.query
-  if (!validator.isInt(pk_user_id)) {
+  if (!validator.isInt(pk_user_id.toString())) {
     res.send({status: 1, msg: '用户id格式不正确，请检查后重新输入'})
   } else {
     const data = await roleService.getRoleByUserId(pk_user_id);
@@ -61,41 +61,45 @@ router.get('/getRoleByUserId', async function (req, res) {
 router.post('/updateRoleRights', async function (req, res) {
   let {pk_role_id, menus} = req.body
   console.log(pk_role_id, menus)
-  const rights = await rightService.getRightsByRoleId(pk_role_id)
+  if (!validator.isInt(pk_role_id.toString())) {
+    res.send({status: 1, msg: '角色id不正确，请检查后重新输入'})
+  } else {
+    const rights = await rightService.getRightsByRoleId(pk_role_id)
 
-  let oldMenus = []
-  for (let i = 0; i < rights.length; i++) {
-    oldMenus.push(rights[i].fk_right_id)
+    let oldMenus = []
+    for (let i = 0; i < rights.length; i++) {
+      oldMenus.push(rights[i].fk_right_id)
+    }
+
+    let newMenus = []
+    menus.toString().split(",").forEach(function (item) {
+      newMenus.push(parseInt(item));
+    })
+    console.log(newMenus, oldMenus)
+
+    oldMenus.forEach(async function (item) {
+      if (newMenus.indexOf(item) === -1) {
+        console.log(item)
+        await rightService.deleteRoleRights(pk_role_id, item)
+      }
+    })
+
+    newMenus.forEach(async function (item) {
+      if (oldMenus.indexOf(item) === -1) {
+        console.log(item)
+        await rightService.addRoleRights(pk_role_id, item)
+      }
+    })
+    res.send({status: 0});
   }
-
-  let newMenus = []
-  menus.toString().split(",").forEach(function (item) {
-    newMenus.push(parseInt(item));
-  })
-  console.log(newMenus, oldMenus)
-
-  oldMenus.forEach(async function (item) {
-    if (newMenus.indexOf(item) === -1) {
-      console.log(item)
-      await rightService.deleteRoleRights(pk_role_id, item)
-    }
-  })
-
-  newMenus.forEach(async function (item) {
-    if (oldMenus.indexOf(item) === -1) {
-      console.log(item)
-      await rightService.addRoleRights(pk_role_id, item)
-    }
-  })
-  res.send({status: 0});
 })
 
 // 更新用户的角色
 router.post('/updateRoleByUserId', async function (req, res) {
   const {pk_user_id, role_id} = req.body
-  if (!validator.isInt(pk_user_id)) {
+  if (!validator.isInt(pk_user_id.toString())) {
     res.send({status: 1, msg: '用户id格式不正确，请检查后重新输入'})
-  } else if (!validator.isInt(role_id)) {
+  } else if (!validator.isInt(role_id.toString())) {
     res.send({status: 1, msg: '角色id格式不正确，请检查后重新输入'})
   } else {
     const data = await roleService.updateRoleByUserId(pk_user_id, role_id);
@@ -107,6 +111,17 @@ router.post('/updateRoleByUserId', async function (req, res) {
 router.get('/getUserRoles', async function (req, res) {
   const data = await roleService.getUserRoles();
   res.send({status: 0, data: data});
+});
+
+// 根据角色id获取所属用户
+router.get('/getUsersByRoleId', async function (req, res) {
+  const {fk_role_id} = req.query
+  if (!validator.isInt(fk_role_id.toString())) {
+    res.send({status: 1, msg: '角色id格式不正确，请检查后重新输入'})
+  } else {
+    const data = await roleService.getUsersByRoleId(fk_role_id);
+    res.send({status: 0, data: data});
+  }
 });
 
 module.exports = router;

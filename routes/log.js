@@ -7,8 +7,16 @@ const logService = require("../service/logService");
 // 添加日志
 router.post('/addLog', async function (req, res) {
   const {operateType, operate_content, pk_user_id} = req.body
-  const data = await logService.addLog(operateType, operate_content, pk_user_id);
-  res.send(data);
+  if (!validator.isInt(operateType.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '操作类型格式不正确，请检查后重新输入'})
+  } else if (!validator.isLength(operate_content, {min: 0, max: 100})) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '操作描述长度不正确，请检查后重新输入'})
+  } else if (!validator.isInt(pk_user_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '用户id长度不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await logService.addLog(operateType, operate_content, pk_user_id);
+    res.send(data);
+  }
 })
 
 // 获取所有日志列表

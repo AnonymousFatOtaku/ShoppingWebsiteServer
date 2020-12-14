@@ -55,10 +55,10 @@ const updateProduct = async (categoryId, name, price, imgs, detail, pk_product_i
 }
 
 // 删除商品
-const deleteProduct = async (pk_category_id) => {
-  let sql = 'UPDATE t_category SET is_delete = 0,gmt_modified = NOW() WHERE pk_category_id = ?'
+const deleteProduct = async (pk_product_id) => {
+  let sql = 'UPDATE t_product SET is_delete = 1,gmt_modified = NOW() WHERE pk_product_id = ?'
   return new Promise((resolve, reject) => {
-    db.connection.query(sql, pk_category_id, (error, result) => {
+    db.connection.query(sql, pk_product_id, (error, result) => {
       if (error) {
         console.error('删除商品异常')
         reject(error)
@@ -87,32 +87,21 @@ const updateStatus = async (productId, status) => {
   })
 }
 
-// 根据商品名搜索商品
-const searchProductsByProductName = async (searchName) => {
-  let sql = "SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND name LIKE " + mysql.escape("%" + searchName + "%")
+// 根据条件搜索商品
+const searchProducts = async (searchName, searchType) => {
+  let sql
+  if (searchType === 'productName') {
+    sql = "SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND name LIKE " + mysql.escape("%" + searchName + "%")
+  } else if (searchType === 'categoryId') {
+    sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND fk_category_id = ?'
+  }
   return new Promise((resolve, reject) => {
     db.connection.query(sql, searchName, (error, result) => {
       if (error) {
-        console.log('根据商品名搜索商品异常')
+        console.log('根据条件搜索商品异常')
         reject(error)
       } else {
-        console.log('根据商品名搜索商品正常')
-        resolve(result)
-      }
-    })
-  })
-}
-
-// 根据分类id搜索商品
-const searchProductsByCategoryId = async (searchName) => {
-  let sql = 'SELECT pk_product_id,fk_category_id,name,description,image,price,saleable,gmt_create,gmt_modified FROM t_product WHERE is_delete = 0 AND fk_category_id = ?'
-  return new Promise((resolve, reject) => {
-    db.connection.query(sql, searchName, (error, result) => {
-      if (error) {
-        console.log('根据分类id搜索商品异常')
-        reject(error)
-      } else {
-        console.log('根据分类id搜索商品正常')
+        console.log('根据条件搜索商品正常')
         resolve(result)
       }
     })
@@ -125,6 +114,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   updateStatus,
-  searchProductsByProductName,
-  searchProductsByCategoryId,
+  searchProducts,
 }

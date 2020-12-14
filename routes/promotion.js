@@ -22,23 +22,35 @@ router.get('/getAllPromotions', async function (req, res) {
 router.post('/updatePromotion', async function (req, res) {
   const {name, description, discount, start_time, end_time, pk_promotion_id} = req.body
   console.log(name, description, discount, start_time, end_time, pk_promotion_id)
-  const data = await promotionService.updatePromotion(name, description, discount, start_time, end_time, pk_promotion_id);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(pk_promotion_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '活动id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await promotionService.updatePromotion(name, description, discount, start_time, end_time, pk_promotion_id);
+    res.send({status: 0, data: data});
+  }
 })
 
 // 删除活动
 router.post('/deletePromotion', async function (req, res) {
   const {pk_promotion_id} = req.body
-  const data = await promotionService.deletePromotion(pk_promotion_id);
-  const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(pk_promotion_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '活动id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await promotionService.deletePromotion(pk_promotion_id);
+    const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
+    res.send({status: 0, data: data});
+  }
 })
 
 // 获取活动商品列表
 router.get('/getPromotionProducts', async function (req, res) {
   const {fk_promotion_id} = req.query
-  const data = await promotionService.getPromotionProducts(fk_promotion_id);
-  res.send({status: 0, data: data});
+  if (!validator.isInt(fk_promotion_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '活动id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    const data = await promotionService.getPromotionProducts(fk_promotion_id);
+    res.send({status: 0, data: data});
+  }
 })
 
 /*
@@ -49,24 +61,30 @@ router.get('/getPromotionProducts', async function (req, res) {
 * */
 router.post('/setPromotionProducts', async function (req, res) {
   let {products, pk_promotion_id} = req.body
-  // console.log(products.products, pk_promotion_id)
+  console.log(products.products, pk_promotion_id)
 
-  // 创建数组保存新的活动商品列表
-  let newProducts = []
-  products.products.toString().split(",").forEach(function (item) {
-    newProducts.push(parseInt(item));
-  })
-  // console.log(newProducts)
+  if (!validator.isInt(pk_promotion_id.toString())) { // 通过matches进行正则验证
+    res.send({status: 1, msg: '活动id不正确，请检查后重新输入'})
+  } else { // 所有数据验证通过才进行数据库操作
+    // 创建数组保存新的活动商品列表
+    let newProducts = []
+    if (products.length > 0) {
+      products.products.toString().split(",").forEach(function (item) {
+        newProducts.push(parseInt(item));
+      })
+    }
+    // console.log(newProducts)
 
-  // 删除旧列表数据
-  const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
+    // 删除旧列表数据
+    const deleteResult = await promotionService.deletePromotionProducts(pk_promotion_id);
 
-  // 添加新列表数据
-  newProducts.forEach(async function (product) {
-    // console.log(product)
-    await promotionService.addPromotionProduct(product, pk_promotion_id)
-  })
-  res.send({status: 0});
+    // 添加新列表数据
+    newProducts.forEach(async function (product) {
+      // console.log(product)
+      await promotionService.addPromotionProduct(product, pk_promotion_id)
+    })
+    res.send({status: 0});
+  }
 })
 
 // 获取所有参加活动的商品列表

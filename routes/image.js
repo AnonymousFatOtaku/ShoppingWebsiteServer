@@ -43,7 +43,7 @@ module.exports = function fileUpload(router) {
         status: 0,
         data: {
           name: file.filename,
-          url: 'http://localhost:8000/upload/' + file.filename
+          url: 'http://localhost:8000/images/' + file.filename
         }
       })
 
